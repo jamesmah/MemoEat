@@ -1,0 +1,34 @@
+body {
+  /*text-align: center;*/
+  margin: auto;
+  background-color: black;
+  color: white;
+  width: 640px;
+  padding-top: 20px;
+}
+
+div {
+  float: left;
+}
+
+.img {
+  width: 200px;
+}
+img {
+  width: 100%;
+  margin: 0;
+}
+
+.details {
+  background-color: rgb(50,50,50);
+  padding: 10px;
+  padding-top: 0px;
+}
+
+p {
+  width: 400px;
+}
+
+.first-line {
+  margin-top: 0;
+}

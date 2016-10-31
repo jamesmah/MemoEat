@@ -1,0 +1,20 @@
+<p class='first-line'><a href='..'>Back to search</a></p>
+<div class='img'> 
+  <% if @result != 'No movie found' %>
+    No image
+  <% elsif @movie['poster'] != nil && @movie['poster'] != "N/A" %>
+    <img src=<%= @movie['poster'] %>>
+  <% end %>
+</div>
+<div class='details'>
+  <% if @result != 'No movie found' %>
+    <% @movie.each do |key, value| %>
+      <% if key != 'poster' %>
+        <p>
+          <%= key %> = <%= value %>
+        </p>
+      <% end %>
+    <% end %>
+  <% end %>
+  <p><%= @result %></p>
+</div>
