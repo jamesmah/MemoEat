@@ -3,7 +3,9 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'httparty'
 require 'uri'
+require 'bcrypt'
 require_relative 'db_config'
-require_relative 'models/movie'
+require_relative 'models/restaurant'
+require_relative 'models/user'
 
 binding.pry

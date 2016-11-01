@@ -1,11 +1,37 @@
-<form action="/session" method="post">
-  <input type="hidden" name="_method" value="post">
+<!-- Page Header -->
+<div class="row">
+    <div class="col-lg-12">
+        <h2 class="page-header">Login
+        </h2>
+    </div>
+</div>
+<!-- /.row -->
+
+<div class="row">
+
+  <form action="/session" method="post">
+    <div">
+      <input type="hidden" name="_method" value="post">
+    </div>
+    
+    <div>
+    <label for="">Username</label>
+    <input name="username" type="text">
+    </div>
+
+    <div>
+    <label for="">Password</label>
+    <input name="password" type="password">
+    </div>
+
+    <button class="btn btn-default">login</button>
+  </form>
+
   
-  <label for="">Username</label>
-  <input name="username" type="text">
+  <hr>
+  
+  <a href="/signup">
+    <button class="btn btn-default">Sign up</button>
+  </a>
 
-  <label for="">Password</label>
-  <input name="password" type="password">
-
-  <button>save</button>
-</form>
+</div>

@@ -25,16 +25,25 @@ end
 get '/' do
   redirect to '/home' if logged_in?
   
-  erb :login, :layout => false
+  erb :login
+end
+
+get '/login' do
+  redirect to '/'
+
 end
 
 get '/signup' do
 
-  erb :signup, :layout => false
+  erb :signup
 end
 
 patch '/signup' do
-  
+  if User.where(username: params[:username]) != []
+    # do if user already exists
+    redirect to '/signup'
+  end
+
   user = User.new
   user.name = params[:name]
   user.username = params[:username]
@@ -72,9 +81,9 @@ end
 get '/home' do
   redirect to '/' unless logged_in?
 
-  @restaurants = Restaurant.where(user_id: 1, archive: false).order("id ASC")
+  @restaurants = Restaurant.where(user_id: session[:user_id], archive: false).order("id ASC")
 
-  erb :home
+  erb :home, :layout => :layout_userpages
 end
 
 delete '/home/:restaurant_id' do
@@ -125,12 +134,12 @@ get '/search' do
   result = HTTParty.get(URI.escape(url_string))
   @restaurants = result['restaurants']
 
-  erb :search
+  erb :search, :layout => :layout_userpages
 end
 
 post '/addnew' do
   restaurant = Restaurant.new
-  restaurant.user_id = 1 # change this
+  restaurant.user_id = session[:user_id]
   restaurant.zomato_id = params[:zomato_id]
   restaurant.name = params[:name]
   restaurant.address = params[:address]
@@ -150,17 +159,17 @@ end
 get '/history' do
   redirect to '/' unless logged_in?
 
-  @restaurants = Restaurant.where(user_id: 1, archive: true).order("id ASC")
+  @restaurants = Restaurant.where(user_id: session[:user_id], archive: true).order("id ASC")
 
-  erb :history
+  erb :history, :layout => :layout_userpages
 end
 
 get '/newmemo' do
-  erb :newmemo
+  erb :newmemo, :layout => :layout_userpages
 end
 
 get '/edituser' do
-  erb :edituser
+  erb :edituser, :layout => :layout_userpages
 end
 
 
