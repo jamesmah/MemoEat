@@ -39,9 +39,9 @@ get '/signup' do
 end
 
 patch '/signup' do
-  if User.where(username: params[:username]) != []
+  if !!User.find_by(username: params[:username])
     # do if user already exists
-    redirect to '/signup'
+    redirect to 'http://google.com'
   end
 
   user = User.new

@@ -1,45 +1,45 @@
 
-<!-- Page Header -->
-<div class="row">
-    <div class="col-lg-12">
-        <h2 class="page-header">My Memos
-        </h2>
+    <!-- Page Header -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="page-header">My Memos
+            </h2>
+        </div>
     </div>
-</div>
-<!-- /.row -->
+    <!-- /.row -->
 
-<!-- Projects Row -->
-<div class="row">
-    
-  <% @restaurants.each do |restaurant| %>
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 portfolio-item">
+    <!-- Projects Row -->
+    <div class="row">
+        
+      <% @restaurants.each do |restaurant| %>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 portfolio-item">
 
-      <h4><%= restaurant['name'] %></h4>
+          <h4><%= restaurant['name'] %></h4>
 
-      <p><%= restaurant['address'] %></p>
+          <p><%= restaurant['address'] %></p>
 
-      <img class="img-responsive" src="<%= restaurant['photo_url'] %>" alt="">
+          <img class="img-responsive" src="<%= restaurant['photo_url'] %>" alt="">
 
-      <form action="/home/<%= restaurant['id'] %>" method="post">
-        <input type="hidden" name="_method" value="delete">
-        <button>Delete</button>
-      </form>
+          <form action="/home/<%= restaurant['id'] %>" method="post">
+            <input type="hidden" name="_method" value="delete">
+            <button>Delete</button>
+          </form>
 
-      <form action="/home/archive/<%= restaurant['id'] %>" method="post">
-        <input type="hidden" name="_method" value="patch">
-        <button>Archive</button>
-      </form>
+          <form action="/home/archive/<%= restaurant['id'] %>" method="post">
+            <input type="hidden" name="_method" value="patch">
+            <button>Archive</button>
+          </form>
 
-      <form action="/home/notes/<%= restaurant['id'] %>" method="post">
-        <input type="hidden" name="_method" value="patch">
-        <label for="">Notes</label>
-        <textarea name="notes" cols="35" rows="3"><%= restaurant['notes'] %></textarea>
-        <button>save</button>
-      </form>
+          <form action="/home/notes/<%= restaurant['id'] %>" method="post">
+            <input type="hidden" name="_method" value="patch">
+            <label for="">Notes</label>
+            <textarea name="notes" cols="35" rows="3"><%= restaurant['notes'] %></textarea>
+            <button>save</button>
+          </form>
+
+        </div>
+
+      <% end %>
+        
 
     </div>
-
-  <% end %>
-    
-
-</div>
