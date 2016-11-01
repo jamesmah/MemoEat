@@ -1,34 +1,16 @@
 body {
-  /*text-align: center;*/
-  margin: auto;
-  background-color: black;
-  color: white;
-  width: 640px;
-  padding-top: 20px;
+    padding-top: 50px; 
+    /*background-color: blue;*/
 }
 
-div {
-  float: left;
+.portfolio-item {
+  /*background-color: green;*/
+  border: solid black 1px;
+  padding: 0 10px 10px 10px;
+  height: 400px;
 }
 
-.img {
-  width: 200px;
-}
-img {
-  width: 100%;
-  margin: 0;
-}
-
-.details {
-  background-color: rgb(50,50,50);
-  padding: 10px;
-  padding-top: 0px;
-}
-
-p {
-  width: 400px;
-}
-
-.first-line {
-  margin-top: 0;
+.navbar {
+  background-color: orange;
+  /*color: white;*/
 }

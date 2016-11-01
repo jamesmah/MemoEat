@@ -2,7 +2,7 @@
 <!-- Page Header -->
 <div class="row">
     <div class="col-lg-12">
-        <h2 class="page-header">History
+        <h2 class="page-header">My Memos
         </h2>
     </div>
 </div>
@@ -25,12 +25,12 @@
         <button>Delete</button>
       </form>
 
-      <form action="/home/unarchive/<%= restaurant['id'] %>" method="post">
+      <form action="/home/archive/<%= restaurant['id'] %>" method="post">
         <input type="hidden" name="_method" value="put">
-        <button>Unarchive</button>
+        <button>Archive</button>
       </form>
-    
-    <form action="/home/notes/<%= restaurant['id'] %>" method="post">
+
+      <form action="/home/notes/<%= restaurant['id'] %>" method="post">
         <input type="hidden" name="_method" value="put">
         <label for="">Notes</label>
         <textarea name="notes" cols="35" rows="3"><%= restaurant['notes'] %></textarea>
@@ -38,8 +38,6 @@
       </form>
 
     </div>
-
-
 
   <% end %>
     

@@ -1,0 +1,35 @@
+
+<!-- Page Header -->
+<div class="row">
+    <div class="col-lg-12">
+        <h2 class="page-header">Search results
+        </h2>
+    </div>
+</div>
+<!-- /.row -->
+
+<!-- Projects Row -->
+<div class="row">
+    
+  <% @restaurants.each do |restaurant| %>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 portfolio-item">
+
+      <h4><%= restaurant['restaurant']['name'] %></h4>
+
+      <p><%= restaurant['restaurant']['location']['address'] %></p>
+
+      <img class="img-responsive" src="<%= restaurant['restaurant']['thumb'] %>" alt="">
+
+      <form action="/addnew?q=<%= params[:q] %>&zomato_id=<%= restaurant['restaurant']['id'] %>&name=<%= restaurant['restaurant']['name'] %>&address=<%= restaurant['restaurant']['address'] %>&cuisines=<%= restaurant['restaurant']['cuisines'] %>&price_range=<%= restaurant['restaurant']['price_range'] %>&photo_url=<%= restaurant['restaurant']['thumb'] %>
+        
+      " method="post">
+        <input type="hidden" name="_method" value="put">
+        <button>Add</button>
+      </form>
+
+    </div>
+
+  <% end %>
+    
+
+</div>
