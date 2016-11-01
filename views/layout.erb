@@ -46,7 +46,13 @@
               <ul class="dropdown-menu">
                 <li><a href="#">User details</a></li>
                 <!-- <li role="separator" class="divider"></li> -->
-                <li><a href="#">Log out (James)</a></li>
+                <li>
+                  <form action="/session" method="post">
+                    <input type="hidden" name="_method" value="delete">  
+                    <button class="btn btn-default">Log out(<%= current_user['name'] %>)</button>
+                  </form>  
+
+                </li>
               </ul>
             </li>
           </ul>

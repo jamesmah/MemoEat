@@ -20,10 +20,10 @@
 
       <img class="img-responsive" src="<%= restaurant['restaurant']['thumb'] %>" alt="">
 
-      <form action="/addnew?q=<%= params[:q] %>&zomato_id=<%= restaurant['restaurant']['id'] %>&name=<%= restaurant['restaurant']['name'] %>&address=<%= restaurant['restaurant']['address'] %>&cuisines=<%= restaurant['restaurant']['cuisines'] %>&price_range=<%= restaurant['restaurant']['price_range'] %>&photo_url=<%= restaurant['restaurant']['thumb'] %>
+      <form action="/addnew?q=<%= params[:q] %>&zomato_id=<%= restaurant['restaurant']['id'] %>&name=<%= restaurant['restaurant']['name'] %>&address=<%= restaurant['restaurant']['location']['address'] %>&cuisines=<%= restaurant['restaurant']['cuisines'] %>&price_range=<%= restaurant['restaurant']['price_range'] %>&photo_url=<%= restaurant['restaurant']['thumb'] %>
         
       " method="post">
-        <input type="hidden" name="_method" value="put">
+        <input type="hidden" name="_method" value="post">
         <button>Add</button>
       </form>
 

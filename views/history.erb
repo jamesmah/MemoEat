@@ -26,12 +26,12 @@
       </form>
 
       <form action="/home/unarchive/<%= restaurant['id'] %>" method="post">
-        <input type="hidden" name="_method" value="put">
+        <input type="hidden" name="_method" value="patch">
         <button>Unarchive</button>
       </form>
     
     <form action="/home/notes/<%= restaurant['id'] %>" method="post">
-        <input type="hidden" name="_method" value="put">
+        <input type="hidden" name="_method" value="patch">
         <label for="">Notes</label>
         <textarea name="notes" cols="35" rows="3"><%= restaurant['notes'] %></textarea>
         <button>save</button>

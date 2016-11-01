@@ -1,6 +1,25 @@
-<form action="/" method="get">
-  <div class='input-box'>
-    <input name="title" type="text">
-    <button>Movie search</button>
-  </div>
+<form action="/signup" method="post">
+  <input type="hidden" name="_method" value="patch">
+
+  <label for="">Name</label>
+  <input name="name" type="text">
+
+  <label for="">Username</label>
+  <input name="username" type="text">
+
+  <label for="">Email</label>
+  <input name="email" type="text">
+
+  <label for="">Password</label>
+  <input name="password" type="password">
+
+  <label for="">Verify Password</label>
+  <input name="password_verify" type="password">
+
+  <label for="">Description</label>
+  <textarea name="description" cols="35" rows="3"></textarea>
+
+
+
+  <button>Create user</button>
 </form>

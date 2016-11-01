@@ -9,18 +9,69 @@ require_relative 'models/user'
 
 enable :sessions
 
+helpers do
+
+  def logged_in?
+    !!current_user
+  end
+
+  def current_user
+    User.find_by(id: session[:user_id])
+  end
+
+end
 
 
 get '/' do
-  # erb :login, :layout => false
-  redirect to '/home'
+  redirect to '/home' if logged_in?
+  
+  erb :login, :layout => false
 end
 
 get '/signup' do
+
   erb :signup, :layout => false
 end
 
+patch '/signup' do
+  
+  user = User.new
+  user.name = params[:name]
+  user.username = params[:username]
+  user.email = params[:email]
+  user.password_digest = BCrypt::Password.create(params[:password])
+  user.location_id = 259
+  user.description = params[:description]
+
+  if user.save
+    session[:user_id] = user.id
+    redirect to '/home'
+  else
+    redirect to '/signup'
+  end
+end
+
+post '/session' do
+  user = User.find_by(username: params[:username])
+  if user && user.authenticate(params[:password])
+
+    session[:user_id] = user.id
+    redirect to '/home'
+  else
+    redirect to '/'
+  end
+end
+
+delete '/session' do
+  # remove the session
+  session[:user_id] = nil
+  redirect to '/'
+end
+
+
 get '/home' do
+  redirect to '/' unless logged_in?
+
   @restaurants = Restaurant.where(user_id: 1, archive: false).order("id ASC")
 
   erb :home
@@ -31,21 +82,21 @@ delete '/home/:restaurant_id' do
   redirect to '/home'
 end
 
-put '/home/archive/:restaurant_id' do
+patch '/home/archive/:restaurant_id' do
   restaurant = Restaurant.find_by(id: params[:restaurant_id])
   restaurant['archive'] = true
   restaurant.save
   redirect to '/home'
 end
 
-put '/home/unarchive/:restaurant_id' do
+patch '/home/unarchive/:restaurant_id' do
   restaurant = Restaurant.find_by(id: params[:restaurant_id])
   restaurant['archive'] = false
   restaurant.save
   redirect to '/history'
 end
 
-put '/home/notes/:restaurant_id' do
+patch '/home/notes/:restaurant_id' do
   restaurant = Restaurant.find_by(id: params[:restaurant_id])
   restaurant['notes'] = params[:notes]
   restaurant.save
@@ -53,6 +104,7 @@ put '/home/notes/:restaurant_id' do
 end
 
 get '/search' do
+  redirect to '/' unless logged_in?
 
   url_string = "https://developers.zomato.com/api/v2.1/search?"
 
@@ -76,7 +128,7 @@ get '/search' do
   erb :search
 end
 
-put '/addnew' do
+post '/addnew' do
   restaurant = Restaurant.new
   restaurant.user_id = 1 # change this
   restaurant.zomato_id = params[:zomato_id]
@@ -96,6 +148,8 @@ end
 
 
 get '/history' do
+  redirect to '/' unless logged_in?
+
   @restaurants = Restaurant.where(user_id: 1, archive: true).order("id ASC")
 
   erb :history
@@ -131,7 +185,7 @@ end
 #   @poster = nil
 
 #   open('search_history.txt', 'a') { |f|
-#     f.puts @param
+#     f.patchs @param
 #   }
 #   if @param == ''
 #     redirect "/about?id=#{@param}"
