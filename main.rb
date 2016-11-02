@@ -10,7 +10,6 @@ require_relative 'models/user'
 enable :sessions
 
 helpers do
-
   def logged_in?
     !!current_user
   end
@@ -18,168 +17,97 @@ helpers do
   def current_user
     User.find_by(id: session[:user_id])
   end
-
 end
-
 
 get '/' do
-  redirect to '/' + current_user['username'] if logged_in?
-
-  erb :login
-end
-
-get '/home' do
-  redirect to '/'
+  redirect to '/browse'
 end
 
 get '/login' do
-  redirect to '/'
+  erb :login
+end
 
+get '/browse' do
+  if logged_in?
+    @restaurants = Restaurant.where.not(user_id: session[:user_id]).order('id DESC').limit(30)
+    @restaurants = @restaurants.to_a
+    @restaurants.uniq! do |restaurant|
+      if !!restaurant['zomato_id']
+        restaurant['zomato_id']
+      else
+        restaurant['address']
+      end
+    end
+    # binding.pry
+    
+    erb :browse, :layout => :layout_userpages
+  else
+    @restaurants = Restaurant.all.order('id DESC').limit(30)
+    @restaurants = @restaurants.to_a
+    @restaurants.uniq! do |restaurant|
+      if !!restaurant['zomato_id']
+        restaurant['zomato_id']
+      else
+        restaurant['address']
+      end
+    end
+    
+    # binding.pry
+    erb :browse
+  end
 end
 
 get '/signup' do
-
+  @user = nil
   erb :signup
 end
 
 post '/signup' do
-  if !!User.find_by(username: params[:username])
-    # do if user already exists
-    redirect to '/signup'
+
+  @user = User.new
+  @user.name = params[:name]
+  @user.username = params[:username]
+  @user.email = params[:email]
+
+  if params[:password] == params[:password_verify]
+    if params[:password] != ""
+      @user.password_digest = BCrypt::Password.create(params[:password])
+    end
+  else
+    @password_verify_error = "Passwords do not match"
   end
 
-  user = User.new
-  user.name = params[:name]
-  user.username = params[:username]
-  user.email = params[:email]
-  user.password_digest = BCrypt::Password.create(params[:password])
-  user.location_id = 259
-  user.description = params[:description]
+  @user.location_id = 259
+  @user.description = params[:description]
 
-  if user.save
-    session[:user_id] = user.id
+  if @user.save && !@password_verify_error
+    session[:user_id] = @user.id
     redirect to '/' + current_user['username']
   else
-    redirect to '/signup'
+    erb :signup
   end
 end
 
-get '/edituser' do
-  @user = User.find_by(id: session[:user_id])
-  erb :edituser, :layout => :layout_userpages
-end
 
-patch '/edituser' do
-  user = User.find_by(id: session[:user_id])
+post '/login' do
+  @username = params[:username]
+  user = User.find_by(username: @username)
+
   if !user
-    # do if user already exists
-    redirect to 'edituser'
-  end
-
-  user.name = params[:name]
-  user.username = params[:username]
-  user.email = params[:email]
-  if !!params[:password]
-    user.password_digest = BCrypt::Password.create(params[:password])
-  end
-  user.location_id = 259
-  user.description = params[:description]
-
-  if user.save
-    redirect to '/edituser'
+    @username_error = "*Invalid username"
+    erb :login
+  elsif !user.authenticate(params[:password])
+    @password_error = "*Incorrect password"
+    erb :login
   else
-    redirect to '/edituser'
-  end
-end
-
-post '/session' do
-  user = User.find_by(username: params[:username])
-  if user && user.authenticate(params[:password])
-
     session[:user_id] = user.id
     redirect to '/' + current_user['username']
-  else
-    redirect to '/'
   end
 end
 
-delete '/session' do
-  # remove the session
+delete '/login' do
   session[:user_id] = nil
-  redirect to '/'
-end
-
-
-# home directory
-
-delete '/home/:restaurant_id' do
-  Restaurant.find_by(id: params[:restaurant_id]).destroy
-  redirect to '/' + current_user['username']
-end
-
-patch '/home/archive/:restaurant_id' do
-  restaurant = Restaurant.find_by(id: params[:restaurant_id])
-  restaurant['archive'] = true
-  restaurant.save
-  redirect to '/' + current_user['username']
-end
-
-patch '/home/notes/:restaurant_id' do
-  restaurant = Restaurant.find_by(id: params[:restaurant_id])
-  restaurant['notes'] = params[:notes]
-  restaurant.save
-  redirect to '/' + current_user['username']
-end
-
-patch '/home/rating/:restaurant_id' do
-  restaurant = Restaurant.find_by(id: params[:restaurant_id])
-  if restaurant['rating'] == params[:rating].to_i
-    restaurant['rating'] = 0
-  else
-    restaurant['rating'] = params[:rating]
-  end
-  restaurant.save
-  redirect to '/' + current_user['username']
-end
-
-
-# history directory
-get '/history' do
-  redirect to '/' unless logged_in?
-
-  @restaurants = Restaurant.where(user_id: session[:user_id], archive: true).order("id ASC")
-
-  erb :history, :layout => :layout_userpages
-end
-
-delete '/history/:restaurant_id' do
-  Restaurant.find_by(id: params[:restaurant_id]).destroy
-  redirect to '/history'
-end
-
-patch '/history/unarchive/:restaurant_id' do
-  restaurant = Restaurant.find_by(id: params[:restaurant_id])
-  restaurant['archive'] = false
-  restaurant.save
-  redirect to '/history'
-end
-
-patch '/history/notes/:restaurant_id' do
-  restaurant = Restaurant.find_by(id: params[:restaurant_id])
-  restaurant['notes'] = params[:notes]
-  restaurant.save
-  redirect to '/history'
-end
-
-patch '/history/rating/:restaurant_id' do
-  restaurant = Restaurant.find_by(id: params[:restaurant_id])
-  if restaurant['rating'] == params[:rating].to_i
-    restaurant['rating'] = 0
-  else
-    restaurant['rating'] = params[:rating]
-  end
-  restaurant.save
-  redirect to '/history'
+  redirect to '/login'
 end
 
 get '/search' do
@@ -193,8 +121,8 @@ get '/search' do
     entity_type: "city",
     country_id: 14,
     q: params[:q],
-    sort: "rating",
-    order: "desc",
+    # sort: "rating",
+    # order: "desc",
   }
 
   search_params.each do |key, value|
@@ -208,46 +136,146 @@ get '/search' do
 end
 
 
-post '/addnew' do
-  restaurant = Restaurant.new
-  restaurant.user_id = session[:user_id]
-  restaurant.zomato_id = params[:zomato_id]
-  restaurant.name = params[:name]
-  restaurant.address = params[:address]
-  restaurant.cuisines = params[:cuisines]
-  restaurant.price_range = params[:price_range]
-  restaurant.photo_url = params[:photo_url]
-  if !!params[:rating]
-    restaurant.rating = params[:rating]
-  else
-    restaurant.rating = 0
-  end
-  restaurant.notes = params[:notes]
-  restaurant.archive = false
-
-  restaurant.save
-  # binding.pry
-
-  # redirect to "/search?q=#{params[:q]}"
-  redirect to '/' + current_user['username']
-end
-
 get '/add' do
   erb :add, :layout => :layout_userpages
 end
 
-# get '/:username/edituser' do
-#   erb :edituser, :layout => :layout_userpages
-# end
 
-get '/:username' do
-  if (!!@user = User.find_by(username: params[:username]) ) && logged_in?
-    @restaurants = Restaurant.where(user_id: @user['id'], archive: false).order("id ASC")
+post '/restaurant' do
+  @restaurant = Restaurant.new
+  @restaurant.user_id = session[:user_id]
+  @restaurant.zomato_id = params[:zomato_id]
+  @restaurant.name = params[:name]
+  @restaurant.address = params[:address]
+  @restaurant.cuisines = params[:cuisines]
+  @restaurant.price_range = params[:price_range]
+  @restaurant.photo_url = params[:photo_url]
+  @restaurant.rating = params[:rating]
+  @restaurant.notes = params[:notes]
+  @restaurant.archive = false
 
-    if logged_in?
-      erb :home, :layout => :layout_userpages
+  if @restaurant.save
+    if !!params[:dir]
+      redirect to '/' + current_user['username'] + params[:dir]
     else
-      erb :home
+      redirect to '/' + current_user['username']
     end
+  else
+    erb :add, :layout => :layout_userpages
+  end
+
+  
+end
+
+delete '/restaurant/:restaurant_id' do
+  Restaurant.find_by(id: params[:restaurant_id]).destroy
+  if !!params[:dir]
+    redirect to '/' + current_user['username'] + params[:dir]
+  else
+    redirect to '/' + current_user['username']
   end
 end
+
+patch '/restaurant/:restaurant_id' do
+  restaurant = Restaurant.find_by(id: params[:restaurant_id])
+
+  if !!params[:archive]
+    restaurant.archive = params[:archive]
+  end
+
+  if !!params[:notes]
+    restaurant.notes = params[:notes]
+  end
+
+  if !!params[:rating]
+    if restaurant.rating == params[:rating].to_i
+      restaurant.rating = nil
+    else
+      restaurant.rating = params[:rating]
+    end
+  end
+
+  restaurant.save
+  if !!params[:dir]
+    redirect to '/' + current_user['username'] + params[:dir]
+  else
+    redirect to '/' + current_user['username']
+  end
+end
+
+get '/settings' do
+  @user = User.find_by(id: session[:user_id])
+  erb :settings, :layout => :layout_userpages
+end
+
+patch '/settings' do
+
+  @user = User.find_by(id: session[:user_id])
+
+  @user.name = params[:name]
+  @user.username = params[:username]
+  @user.email = params[:email]
+  if params[:password_old] != "" 
+    if @user.authenticate(params[:password_old])
+      @password_old = params[:password_old]
+      if !!params[:password_new]
+        if params[:password_new] == params[:password_verify]
+          if params[:password_new]!= ""
+            @user.password_digest = BCrypt::Password.create(params[:password_new])
+          else
+            @password_new_error = "*No new password"
+          end
+        else
+          @password_verify_error = "*Passwords do not match"
+        end
+      end
+    else
+      @password_error = "*Incorrect password"
+    end
+  end
+  @user.location_id = 259
+  @user.description = params[:description]
+
+  if @user.save && !@password_error && !@password_new_error && !@password_verify_error
+    @password_old = nil
+    @saved_message = "Saved!"
+    erb :settings, :layout => :layout_userpages
+  else
+    erb :settings, :layout => :layout_userpages
+  end
+end
+
+
+get '/:username' do
+  if (!!@user = User.find_by(username: params[:username]) )
+    if @user['id'] == session[:user_id]
+      @restaurants = Restaurant.where(user_id: @user['id'], archive: false).order("id ASC")
+    else
+      @restaurants = Restaurant.where(user_id: @user['id']).order("id DESC")
+    end
+
+    if logged_in?
+      erb :mymemos, :layout => :layout_userpages
+    else
+      erb :mymemos
+    end
+  else
+    redirect to '/'
+  end
+end
+
+get '/:username/' do
+  redirect to '/' + params[:username]
+end
+
+get '/:username/archive' do
+  if User.find_by(id: session[:user_id])['username'] == params[:username]
+    @restaurants = Restaurant.where(user_id: session[:user_id], archive: true).order("id DESC")
+    erb :archive, :layout => :layout_userpages
+  else
+    redirect to '/'
+  end
+end
+
+
+

@@ -16,7 +16,7 @@ CREATE TABLE restaurants (
   zomato_id INTEGER,
   name VARCHAR(400),
   address TEXT,
-  cuisine VARCHAR(400),
+  cuisines VARCHAR(400),
   price_range INTEGER,
   photo_url TEXT,
   rating INTEGER,

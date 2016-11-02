@@ -3,32 +3,50 @@
       <div class="col-lg-12">
         <h2 class="page-header">Edit user detail</h2>
         
-        <form action="/edituser" method="post">
+        <form action="/settings" method="post">
           <input type="hidden" name="_method" value="patch">
 
+
           <div>
-            <label for="">Name</label>
+            <label for="">Name*</label>
             <input name="name" type="text" value="<%= @user['name'] %>">
+            <% if !!@user %>
+              <%= @user.errors.messages[:name].join(", ") %>
+            <% end %>
           </div>
 
           <div>
-            <label for="">Username</label>
+            <label for="">Username*</label>
             <input name="username" type="text" value="<%= @user['username'] %>">
+            <% if !!@user %>
+              <%= @user.errors.messages[:username].join(", ") %>
+            <% end %>
           </div>
 
           <div>
-            <label for="">Email</label>
+            <label for="">Email*</label>
             <input name="email" type="text" value="<%= @user['email'] %>">
+            <% if !!@user %>
+              <%= @user.errors.messages[:email].join(", ") %>
+            <% end %>
+          </div>
+
+          <div>
+            <label for="">Old password</label>
+            <input name="password_old" type="password" value="<%= @password_old %>">
+            <%= @password_error %>
           </div>
 
           <div>
             <label for="">New password</label>
-            <input name="password" type="password">
+            <input name="password_new" type="password">
+            <%= @password_new_error %>
           </div>
 
           <div>
             <label for="">Verify new Password</label>
             <input name="password_verify" type="password">
+            <%= @password_verify_error %>
           </div>
 
           <div>
@@ -37,6 +55,7 @@
           </div>
 
           <button>Update details</button>
+          <%= @saved_message %>
         </form>
       </div>
 

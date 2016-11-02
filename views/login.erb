@@ -3,17 +3,19 @@
       <div class="col-lg-12">
         <h2 class="page-header">Login</h2>
 
-        <form action="/session" method="post">
+        <form action="/login" method="post">
           <input type="hidden" name="_method" value="post">
           
           <div>
             <label for="">Username</label>
-            <input name="username" type="text">
+            <input name="username" type="text" value="<%= !!@username ? @username : "" %>">
+            <%= @username_error %>
           </div>
 
           <div>
             <label for="">Password</label>
             <input name="password" type="password">
+            <%= @password_error %>
           </div>
 
           <button class="btn btn-default">login</button>

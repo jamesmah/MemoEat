@@ -4,35 +4,57 @@
         <h2 class="page-header">Create user account</h2>
         
         <form action="/signup" method="post">
-
           <div>
-            <label for="">Name</label>
-            <input name="name" type="text">
+            <label for="">Name*</label>
+            <% if !@user %>
+              <input name="name" type="text">
+            <% else %>
+              <input name="name" type="text" value="<%= @user.name %>">
+              <%= @user.errors.messages[:name].join(", ") %>
+            <% end %>
           </div>
 
           <div>
-            <label for="">Username</label>
-            <input name="username" type="text">
+            <label for="">Username*</label>
+            <% if !@user %>
+              <input name="username" type="text">
+            <% else %>
+              <input name="username" type="text" value="<%= @user.username %>">
+              <%= @user.errors.messages[:username].join(", ") %>
+            <% end %>
           </div>
 
           <div>
-            <label for="">Email</label>
-            <input name="email" type="text">
+            <label for="">Email*</label>
+            <% if !@user %>
+              <input name="email" type="text">
+            <% else %>
+              <input name="email" type="text" value="<%= @user.email %>">
+              <%= @user.errors.messages[:email].join(", ") %>
+            <% end %>
           </div>
 
           <div>
-            <label for="">Password</label>
+            <label for="">Password*</label>
             <input name="password" type="password">
+            <% if !!@user && !@password_error %>
+              <%= @user.errors.messages[:password_digest].join(", ") %>
+            <% end %>
           </div>
 
           <div>
-            <label for="">Verify Password</label>
+            <label for="">Verify Password*</label>
             <input name="password_verify" type="password">
+            <%= @password_verify_error %>
           </div>
 
           <div>
             <label for="">Description</label>
-            <textarea name="description" cols="35" rows="3"></textarea>
+            <% if !@user %>
+              <textarea name="description" cols="35" rows="3"></textarea>
+            <% else %>
+              <textarea name="description" cols="35" rows="3"><%= @user.description %></textarea>
+            <% end %>
           </div>
 
           <button>Create user</button>

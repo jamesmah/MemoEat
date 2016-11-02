@@ -1,0 +1,120 @@
+
+    <!-- Page Header -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="page-header">
+              Community picks
+            </h2>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <!-- Projects Row -->
+    <div class="row">
+        
+      <% @restaurants.each do |restaurant| %>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 portfolio-item">
+
+          <h4><%= restaurant['name'] %></h4>
+          <p><%= restaurant['address'] %></p>
+          <p><%= restaurant['cuisines'] %></p>
+
+          <% for i in 1..5 %>
+            <% if i <= restaurant['price_range'] %>
+              <img src="/images/star2.png">
+            <% else %>
+              <img src="/images/star1.png">
+            <% end %>
+          <% end %>
+
+          <div>
+            <img class="img-responsive" src="<%= restaurant['photo_url'] %>" alt="">
+          </div>
+
+          <% if logged_in? && current_user['username'] == params[:username] %>
+            
+            <form action="/restaurant/<%= restaurant['id'] %>" method="post">
+              <input type="hidden" name="_method" value="delete">
+              <button>Delete</button>
+            </form>
+
+            <form action="/restaurant/<%= restaurant['id'] %>" method="post">
+              <input type="hidden" name="_method" value="patch">
+              <input type="hidden" name="archive" value="true">
+              <button>Archive</button>
+            </form>
+
+            <% for i in 1..5 %>
+              <% if !!restaurant['rating'] && i <= restaurant['rating'] %>
+                <form action="/restaurant/<%= restaurant['id'] %>" method="post">
+                  <input type="hidden" name="_method" value="patch">
+                  <input type="hidden" name="rating" value="<%= i %>">
+                  <button><img src="/images/star2.png"></button>
+                </form>
+              <% else %>
+                <form action="/restaurant/<%= restaurant['id'] %>" method="post">
+                  <input type="hidden" name="_method" value="patch">
+                  <input type="hidden" name="rating" value="<%= i %>">
+                  <button><img src="/images/star1.png"></button>
+                </form>
+              <% end %>
+            <% end %>
+
+            <form action="/restaurant/<%= restaurant['id'] %>" method="post">
+              <input type="hidden" name="_method" value="patch">
+              <label for="">Notes</label>
+              <textarea name="notes" cols="35" rows="3"><%= restaurant['notes'] %></textarea>
+              <button>save</button>
+            </form>
+          <% else %>
+
+            <div>
+              <% for i in 1..5 %>
+                <% if !!restaurant['rating'] && i <= restaurant['rating'] %>
+                  <img src="/images/star2.png">
+                <% else %>
+                  <img src="/images/star1.png">
+                <% end %>
+              <% end %>    
+            </div>
+
+            <label for="">Notes</label>
+              <p><%= restaurant['notes'] %></p>
+            
+            <% user = User.find_by(id: restaurant['user_id']) %>
+              <p>Found by <a href="/<%= user.username %>"><%= user.name %></a></p>
+
+            <% if logged_in? %>
+              
+
+            
+              <form action="/restaurant" method="post">
+                <input type="hidden" name="zomato_id" value="<%= restaurant['zomato_id'] %>">
+                <input type="hidden" name="name" value="<%= restaurant['name'] %>">
+                <input type="hidden" name="address" value="<%= restaurant['address'] %>">
+                <input type="hidden" name="cuisines" value="<%= restaurant['cuisines'] %>">
+                <input type="hidden" name="price_range" value="<%= restaurant['price_range'] %>">
+                <input type="hidden" name="photo_url" value="<%= restaurant['photo_url'] %>">
+                <input type="hidden" name="rating" value="<%= restaurant['rating'] %>">
+                <input type="hidden" name="notes" value="<%= restaurant['notes'] %>">
+
+                <% if !!Restaurant.find_by(user_id: session[:user_id], zomato_id: restaurant['zomato_id'], archive: false) %>
+                  <button type="button">Added!</button>
+                <% elsif !!Restaurant.find_by(user_id: session[:user_id], zomato_id: restaurant['zomato_id'], archive: true) %>
+                  <button type="button">Archived!</button>
+                <% else %>
+                  <button>Add</button>
+                <% end %>
+              </form>
+
+            <% end %>
+          <% end %>
+
+          
+
+        </div>
+
+      <% end %>
+        
+
+    </div>

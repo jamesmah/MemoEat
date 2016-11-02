@@ -14,3 +14,7 @@ body {
   background-color: orange;
   /*color: white;*/
 }
+
+.navbar-brand {
+  padding-right: 0;
+}

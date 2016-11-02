@@ -15,7 +15,7 @@
 
           <img class="img-responsive" src="<%= restaurant['restaurant']['thumb'] %>" alt="">
 
-            <form action="/addnew" method="post">
+            <form action="/restaurant" method="post">
               <input type="hidden" name="zomato_id" value="<%= restaurant['restaurant']['id'] %>">
               <input type="hidden" name="name" value="<%= restaurant['restaurant']['name'] %>">
               <input type="hidden" name="address" value="<%= restaurant['restaurant']['location']['address'] %>">
