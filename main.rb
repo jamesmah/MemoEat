@@ -217,7 +217,9 @@ post '/addnew' do
   restaurant.cuisines = params[:cuisines]
   restaurant.price_range = params[:price_range]
   restaurant.photo_url = params[:photo_url]
-  if !restaurant.rating = params[:rating]
+  if !!params[:rating]
+    restaurant.rating = params[:rating]
+  else
     restaurant.rating = 0
   end
   restaurant.notes = params[:notes]
