@@ -1,0 +1,62 @@
+    <!-- Page Header -->
+    <div class="row">
+      <div class="col-lg-12">
+        <h2 class="page-header">Add restaurant</h2>
+        
+        <form action="/addnew" method="post">
+
+          <div>
+            <label for="">Name</label>
+            <input name="name" type="text">
+          </div>
+
+          <div>
+            <label for="">Address</label>
+            <textarea name="address" cols="35" rows="2"></textarea>
+          </div>
+          
+          <div>
+            <label for="">Cuisine types</label>
+            <input name="cuisines" type="text">
+          </div>
+
+          <div>
+            <label for="">Price range(1-5)</label>
+            <select name="price_range" >
+              <option value=""> </option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="">Photo URL</label>
+            <textarea name="photo_url" cols="35" rows="2"></textarea>
+          </div>
+          
+
+          <div>
+            <label for="">Notes</label>
+            <textarea name="notes" cols="35" rows="3"></textarea>
+          </div>
+
+          <div>
+            <label for="">Rating</label>
+            <select name="rating" >
+              <option value=""> </option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+
+          <button>Update details</button>
+        </form>
+      </div>
+
+    </div>

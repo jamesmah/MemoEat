@@ -1,16 +1,11 @@
-
-    <!-- Page Header -->
     <div class="row">
         <div class="col-lg-12">
             <h2 class="page-header">Search results
             </h2>
         </div>
     </div>
-    <!-- /.row -->
 
-    <!-- Projects Row -->
     <div class="row">
-        
       <% @restaurants.each do |restaurant| %>
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 portfolio-item">
 
@@ -20,16 +15,21 @@
 
           <img class="img-responsive" src="<%= restaurant['restaurant']['thumb'] %>" alt="">
 
-          <form action="/addnew?q=<%= params[:q] %>&zomato_id=<%= restaurant['restaurant']['id'] %>&name=<%= restaurant['restaurant']['name'] %>&address=<%= restaurant['restaurant']['location']['address'] %>&cuisines=<%= restaurant['restaurant']['cuisines'] %>&price_range=<%= restaurant['restaurant']['price_range'] %>&photo_url=<%= restaurant['restaurant']['thumb'] %>
-            
-          " method="post">
-            <input type="hidden" name="_method" value="post">
-            <button>Add</button>
-          </form>
+            <form action="/addnew" method="post">
+              <input type="hidden" name="zomato_id" value="<%= restaurant['restaurant']['id'] %>">
+              <input type="hidden" name="name" value="<%= restaurant['restaurant']['name'] %>">
+              <input type="hidden" name="address" value="<%= restaurant['restaurant']['location']['address'] %>">
+              <input type="hidden" name="cuisines" value="<%= restaurant['restaurant']['cuisines'] %>">
+              <input type="hidden" name="price_range" value="<%= restaurant['restaurant']['price_range'] %>">
+              <input type="hidden" name="photo_url" value="<%= restaurant['restaurant']['thumb'] %>">
 
+              <% if !!Restaurant.find_by(user_id: session[:user_id], zomato_id: restaurant['restaurant']['id']) %>
+                <button>Add another</button>
+              <% else %>
+                <button>Add</button>
+              <% end %>
+            </form>
+          
         </div>
-
       <% end %>
-        
-
     </div>
