@@ -7,7 +7,7 @@ if ($(window).width() < 768 && $(window).width() > 700) {
     $( "div.memo-collapse" ).removeClass("in");
     $( "div.panel-heading").attr("data-toggle", "collapse");
 }
-else if ($(window).width() < 768) {
+if ($(window).width() < 768) {
     $( "div.panel-heading" ).mouseenter( function() {
         document.body.style.cursor = "pointer";
     } ).mouseleave( function() {
