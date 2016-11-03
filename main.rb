@@ -28,32 +28,33 @@ get '/login' do
 end
 
 get '/browse' do
+  @dir = "browse"
+  @header_logged_in = "Recent finds"
+  @header = "Recent finds"
+
   if logged_in?
-    @restaurants = Restaurant.where.not(user_id: session[:user_id]).order('id DESC').limit(30)
-    @restaurants = @restaurants.to_a
-    @restaurants.uniq! do |restaurant|
-      if !!restaurant['zomato_id']
-        restaurant['zomato_id']
-      else
-        restaurant['address']
-      end
-    end
-    # binding.pry
-    
-    erb :browse, :layout => :layout_userpages
+    @restaurants = Restaurant.where.not(user_id: session[:user_id]).order('id DESC').limit(40)
   else
-    @restaurants = Restaurant.all.order('id DESC').limit(30)
-    @restaurants = @restaurants.to_a
-    @restaurants.uniq! do |restaurant|
-      if !!restaurant['zomato_id']
-        restaurant['zomato_id']
-      else
-        restaurant['address']
-      end
+    @restaurants = Restaurant.all.order('id DESC').limit(40)
+  end
+
+  @restaurants = @restaurants.to_a.shuffle!
+  @restaurants.uniq! do |restaurant|
+    if !!restaurant['zomato_id']
+      restaurant['zomato_id']
+    else
+      restaurant['address']
     end
-    
-    # binding.pry
-    erb :browse
+  end
+
+  @restaurants.sort! { |x,y|
+    y['id'] <=> x['id']
+  }
+
+  if logged_in?
+    erb :memos, :layout => :layout_userpages
+  else
+    erb :memos
   end
 end
 
@@ -67,6 +68,12 @@ post '/signup' do
   @user = User.new
   @user.name = params[:name]
   @user.username = params[:username]
+
+  if /[^a-zA-Z]+/ === params[:username]
+    @username_error = "*Invalid username. No special characters or spacing."
+  end
+
+
   @user.email = params[:email]
 
   if params[:password] == params[:password_verify]
@@ -80,10 +87,14 @@ post '/signup' do
   @user.location_id = 259
   @user.description = params[:description]
 
-  if @user.save && !@password_verify_error
+  if !@username_error && !@password_verify_error && @user.save
     session[:user_id] = @user.id
     redirect to '/' + current_user['username']
   else
+    if !@password_verify_error
+      @password_error = @user.errors.messages[:password_digest].join(", ")
+    end
+    # binding.pry
     erb :signup
   end
 end
@@ -94,7 +105,7 @@ post '/login' do
   user = User.find_by(username: @username)
 
   if !user
-    @username_error = "*Invalid username"
+    @username_error = "Invalid username"
     erb :login
   elsif !user.authenticate(params[:password])
     @password_error = "*Incorrect password"
@@ -112,6 +123,8 @@ end
 
 get '/search' do
   redirect to '/' unless logged_in?
+
+  @dir = "search?q=" + params[:q]
 
   url_string = "https://developers.zomato.com/api/v2.1/search?"
 
@@ -156,7 +169,7 @@ post '/restaurant' do
 
   if @restaurant.save
     if !!params[:dir]
-      redirect to '/' + current_user['username'] + params[:dir]
+      redirect to '/' + params[:dir]
     else
       redirect to '/' + current_user['username']
     end
@@ -170,7 +183,7 @@ end
 delete '/restaurant/:restaurant_id' do
   Restaurant.find_by(id: params[:restaurant_id]).destroy
   if !!params[:dir]
-    redirect to '/' + current_user['username'] + params[:dir]
+    redirect to '/' + params[:dir]
   else
     redirect to '/' + current_user['username']
   end
@@ -197,7 +210,7 @@ patch '/restaurant/:restaurant_id' do
 
   restaurant.save
   if !!params[:dir]
-    redirect to '/' + current_user['username'] + params[:dir]
+    redirect to '/' + params[:dir]
   else
     redirect to '/' + current_user['username']
   end
@@ -213,7 +226,13 @@ patch '/settings' do
   @user = User.find_by(id: session[:user_id])
 
   @user.name = params[:name]
+
   @user.username = params[:username]
+
+  if /[^a-zA-Z]+/ === params[:username]
+    @username_error = "*Invalid username. No special characters or spacing."
+  end
+
   @user.email = params[:email]
   if params[:password_old] != "" 
     if @user.authenticate(params[:password_old])
@@ -236,7 +255,7 @@ patch '/settings' do
   @user.location_id = 259
   @user.description = params[:description]
 
-  if @user.save && !@password_error && !@password_new_error && !@password_verify_error
+  if !@username_error && !@password_error && !@password_new_error && !@password_verify_error && @user.save
     @password_old = nil
     @saved_message = "Saved!"
     erb :settings, :layout => :layout_userpages
@@ -247,7 +266,13 @@ end
 
 
 get '/:username' do
+  @dir = params[:username]
+
   if (!!@user = User.find_by(username: params[:username]) )
+    @header_logged_in = "My Memos"
+    @header = @user['name'] + "'s Memos"
+
+
     if @user['id'] == session[:user_id]
       @restaurants = Restaurant.where(user_id: @user['id'], archive: false).order("id ASC")
     else
@@ -255,9 +280,9 @@ get '/:username' do
     end
 
     if logged_in?
-      erb :mymemos, :layout => :layout_userpages
+      erb :memos, :layout => :layout_userpages
     else
-      erb :mymemos
+      erb :memos
     end
   else
     redirect to '/'
@@ -269,9 +294,15 @@ get '/:username/' do
 end
 
 get '/:username/archive' do
-  if User.find_by(id: session[:user_id])['username'] == params[:username]
+  @dir = params[:username] + "/archive"
+
+  @user = User.find_by(id: session[:user_id])
+  if @user['username'] == params[:username]
+    @header_logged_in = "My Archive"
+    @header = @user['name'] + "'s Archive"
+
     @restaurants = Restaurant.where(user_id: session[:user_id], archive: true).order("id DESC")
-    erb :archive, :layout => :layout_userpages
+    erb :memos, :layout => :layout_userpages
   else
     redirect to '/'
   end

@@ -81,7 +81,7 @@
             <label for="">Notes</label>
               <p><%= restaurant['notes'] %></p>
             
-            <% user = User.find_by(id: restaurant['user_id']) %>
+              <% user = User.find_by(id: restaurant['user_id']) %>
               <p>Found by <a href="/<%= user.username %>"><%= user.name %></a></p>
 
             <% if logged_in? %>

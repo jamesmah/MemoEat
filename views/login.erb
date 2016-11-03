@@ -6,19 +6,19 @@
         <form action="/login" method="post">
           <input type="hidden" name="_method" value="post">
           
-          <div>
+          <div class="form-group userform">
             <label for="">Username</label>
-            <input name="username" type="text" value="<%= !!@username ? @username : "" %>">
+            <input class="form-control" name="username" type="text" value="<%= !!@username ? @username : "" %>">
             <%= @username_error %>
           </div>
 
-          <div>
+          <div class="form-group userform">
             <label for="">Password</label>
-            <input name="password" type="password">
+            <input class="form-control" name="password" type="password">
             <%= @password_error %>
           </div>
 
-          <button class="btn btn-default">login</button>
+          <button class="btn btn-default">Log in</button>
         </form>
 
         <hr>

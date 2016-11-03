@@ -29,7 +29,7 @@
                 <a class="visible-xs" data-toggle="collapse" href="#collapse<%= restaurant['id'] %>">Collapsible panel</a>
               </h4>
             </div>
-            <div class="hidden-xs" id="collapse<%= restaurant['id'] %>" class="panel-collapse collapse">
+            <div class="visible-sm visible-md visible-lg" id="collapse<%= restaurant['id'] %>" class="panel-collapse collapse">
               <p><%= restaurant['cuisines'] %></p>
 
               <% for i in 1..5 %>

@@ -9,7 +9,7 @@
 </head>
 <body>
   <!-- Navigation -->
-  <nav class="navbar navbar-inverse navbar-fluid-top" role="navigation">
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
@@ -25,13 +25,13 @@
           <ul class="nav navbar-nav">
             <li ><a href="/signup">Sign up</a></li>
             <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" role="button">Login <span class="caret"></span></a>
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button">Log in <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <form class="navbar-form" action="/login" method="post">
+                <form class="navbar-form" action="/login" method="post" autocomplete="off">
                   <input type="hidden" name="_method" value="post">
                   <input name="username" type="text" class="form-control" placeholder="username">
                   <input name="password" type="password" class="form-control" placeholder="password">
-                  <button class="btn btn-default">login</button>
+                  <button class="btn btn-default">Log in</button>
                 </form>
               </ul>
             </li>
@@ -44,15 +44,13 @@
   <div class="container">
 
     <%= yield %>
-
-    <hr>
-    
     
   </div>
   
 
   <script src="/scripts/jquery.js"></script>
   <script src="/scripts/bootstrap.js"></script>
+  <script src="/scripts/memo.js"></script>
 </body>
 
 </html>

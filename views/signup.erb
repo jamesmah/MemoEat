@@ -4,60 +4,59 @@
         <h2 class="page-header">Create user account</h2>
         
         <form action="/signup" method="post">
-          <div>
+          <div class="form-group userform">
             <label for="">Name*</label>
             <% if !@user %>
-              <input name="name" type="text">
+              <input class="form-control" name="name" type="text">
             <% else %>
-              <input name="name" type="text" value="<%= @user.name %>">
+              <input class="form-control" name="name" type="text" value="<%= @user.name %>">
               <%= @user.errors.messages[:name].join(", ") %>
             <% end %>
           </div>
 
-          <div>
+          <div class="form-group userform">
             <label for="">Username*</label>
             <% if !@user %>
-              <input name="username" type="text">
+              <input class="form-control" name="username" type="text">
             <% else %>
-              <input name="username" type="text" value="<%= @user.username %>">
+              <input class="form-control" name="username" type="text" value="<%= @user.username %>">
               <%= @user.errors.messages[:username].join(", ") %>
+              <%= @username_error %>
             <% end %>
           </div>
 
-          <div>
+          <div class="form-group userform">
             <label for="">Email*</label>
             <% if !@user %>
-              <input name="email" type="text">
+              <input class="form-control" name="email" type="text">
             <% else %>
-              <input name="email" type="text" value="<%= @user.email %>">
+              <input class="form-control" name="email" type="text" value="<%= @user.email %>">
               <%= @user.errors.messages[:email].join(", ") %>
             <% end %>
           </div>
 
-          <div>
+          <div class="form-group userform">
             <label for="">Password*</label>
-            <input name="password" type="password">
-            <% if !!@user && !@password_error %>
-              <%= @user.errors.messages[:password_digest].join(", ") %>
-            <% end %>
+            <input class="form-control" name="password" type="password">
+            <%= @password_error %>
           </div>
 
-          <div>
+          <div class="form-group userform">
             <label for="">Verify Password*</label>
-            <input name="password_verify" type="password">
+            <input class="form-control" name="password_verify" type="password">
             <%= @password_verify_error %>
           </div>
 
-          <div>
+          <div class="form-group userform">
             <label for="">Description</label>
             <% if !@user %>
-              <textarea name="description" cols="35" rows="3"></textarea>
+              <textarea class="form-control" name="description" cols="35" rows="3"></textarea>
             <% else %>
-              <textarea name="description" cols="35" rows="3"><%= @user.description %></textarea>
+              <textarea class="form-control" name="description" cols="35" rows="3"><%= @user.description %></textarea>
             <% end %>
-          </div>
+          </div class="form-group userform">
 
-          <button>Create user</button>
+          <button class="btn btn-default">Create user</button>
         </form>
       </div>
 

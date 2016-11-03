@@ -22,10 +22,10 @@
         <a class="navbar-brand" href="/">MemoEat</a>
       </div>
 
-      <div class="collapse navbar-collapse" id=navbar-collapse-1">
+      <div class="collapse navbar-collapse" id="navbar-collapse-1">
         <div class="navbar-right">
 
-          <form class="navbar-form navbar-left" action="/search">
+          <form class="navbar-form navbar-left search-bar" action="/search">
             <div class="input-group">
 
               <input type="text" class="form-control" placeholder="Search restaurant" name="q">
@@ -37,7 +37,7 @@
           </form>
           
           <a href="/add">
-            <button type="button" class="btn btn-default navbar-btn navbar-left">Add restaurant +</button>
+            <button type="button" class="btn btn-default navbar-btn navbar-left add-button">Add restaurant +</button>
           </a>
 
           <ul class="nav navbar-nav">
@@ -75,14 +75,13 @@
   <div class="container">
 
     <%= yield %>
-
-    <hr>
     
   </div>
   
 
   <script src="/scripts/jquery.js"></script>
   <script src="/scripts/bootstrap.js"></script>
+  <script src="/scripts/memo.js"></script>
 </body>
 
 </html>
