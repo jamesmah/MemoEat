@@ -5,81 +5,91 @@
         
         <form action="/restaurant" method="post">
 
-          <div>
+          <div class="form-group userform">
             <label for="">Name*</label>
             <% if !@restaurant %>
-              <input name="name" type="text">
+              <input class="form-control" name="name" type="text">
             <% else %>
-              <input name="name" type="text" value="<%= @restaurant.name %>">
+              <input class="form-control" name="name" type="text" value="<%= @restaurant.name %>">
               <%= @restaurant.errors.messages[:name].join(", ") %>
             <% end %>
           </div>
 
-          <div>
+          <div class="form-group userform">
             <label for="">Address*</label>
             <% if !@restaurant %>
-              <textarea name="address" cols="35" rows="2"></textarea>
+              <input class="form-control" name="address" type="text">
             <% else %>
-              <textarea name="address" cols="35" rows="2"><%= @restaurant.address %></textarea>
+              <input class="form-control" name="address" type="text" value="<%= @restaurant.address %>">
               <%= @restaurant.errors.messages[:address].join(", ") %>
             <% end %>
           </div>
           
-          <div>
+          <div class="form-group userform">
             <label for="">Cuisines*</label>
             <% if !@restaurant %>
-              <textarea name="cuisines" cols="35" rows="2"></textarea>
+              <input class="form-control" name="cuisines" type="text">
             <% else %>
-              <textarea name="cuisines" cols="35" rows="2"><%= @restaurant.cuisines %></textarea>
+              <input class="form-control" name="cuisines" type="text" value="<%= @restaurant.cuisines %>">
               <%= @restaurant.errors.messages[:address].join(", ") %>
             <% end %>
           </div>
 
-          <div>
-            <label for="">Price range(1-5)</label>
-            <select name="price_range">
-              <option value="" > </option>
-              <option value="1" <%= !!@restaurant && @restaurant.price_range==1 ? "selected" : "" %>>1</option>
-              <option value="2" <%= !!@restaurant && @restaurant.price_range==2 ? "selected" : "" %>>2</option>
-              <option value="3" <%= !!@restaurant && @restaurant.price_range==3 ? "selected" : "" %>>3</option>
-              <option value="4" <%= !!@restaurant && @restaurant.price_range==4 ? "selected" : "" %>>4</option>
-              <option value="5" <%= !!@restaurant && @restaurant.price_range==5 ? "selected" : "" %>>5</option>
-            </select>
+          <div class="form-group userform">
+            <label for="">Price range</label>
+            <div>
+              <select name="price_range">
+                <option value="" > </option>
+                <option value="1" <%= !!@restaurant && @restaurant.price_range==1 ? "selected" : "" %>>1</option>
+                <option value="2" <%= !!@restaurant && @restaurant.price_range==2 ? "selected" : "" %>>2</option>
+                <option value="3" <%= !!@restaurant && @restaurant.price_range==3 ? "selected" : "" %>>3</option>
+                <option value="4" <%= !!@restaurant && @restaurant.price_range==4 ? "selected" : "" %>>4</option>
+                <option value="5" <%= !!@restaurant && @restaurant.price_range==5 ? "selected" : "" %>>5</option>
+              </select>
+            </div>
           </div>
 
-          <div>
+          <div class="form-group userform">
             <label for="">Photo URL</label>
             <% if !@restaurant %>
-              <textarea name="photo_url" cols="35" rows="2"></textarea>
+              
+              <input class="form-control" name="photo_url" type="text">
             <% else %>
-              <textarea name="photo_url" cols="35" rows="2"><%= @restaurant.photo_url %></textarea>
+              <input class="form-control" name="photo_url" type="text" value="<%= @restaurant.photo_url %>">
+
             <% end %>
           </div>
           
 
-          <div>
+          <div class="form-group userform">
             <label for="">Notes</label>
             <% if !@restaurant %>
-              <textarea name="notes" cols="35" rows="2"></textarea>
+              <textarea class="form-control" name="notes" cols="35" rows="2"></textarea>
             <% else %>
-              <textarea name="notes" cols="35" rows="2"><%= @restaurant.notes %></textarea>
+              <textarea class="form-control" name="notes" cols="35" rows="2"><%= @restaurant.notes %></textarea>
             <% end %>
           </div>
 
-          <div>
+          <div class="form-group userform">
             <label for="">Rating</label>
-            <select name="rating" >
-              <option value=""> </option>
-              <option value="1" <%= !!@restaurant && @restaurant.rating==1 ? "selected" : "" %>>1</option>
-              <option value="2" <%= !!@restaurant && @restaurant.rating==2 ? "selected" : "" %>>2</option>
-              <option value="3" <%= !!@restaurant && @restaurant.rating==3 ? "selected" : "" %>>3</option>
-              <option value="4" <%= !!@restaurant && @restaurant.rating==4 ? "selected" : "" %>>4</option>
-              <option value="5" <%= !!@restaurant && @restaurant.rating==5 ? "selected" : "" %>>5</option>
-            </select>
+            <div>
+              <select name="rating" >
+                <option value=""> </option>
+                <option value="1" <%= !!@restaurant && @restaurant.rating==1 ? "selected" : "" %>>1</option>
+                <option value="2" <%= !!@restaurant && @restaurant.rating==2 ? "selected" : "" %>>2</option>
+                <option value="3" <%= !!@restaurant && @restaurant.rating==3 ? "selected" : "" %>>3</option>
+                <option value="4" <%= !!@restaurant && @restaurant.rating==4 ? "selected" : "" %>>4</option>
+                <option value="5" <%= !!@restaurant && @restaurant.rating==5 ? "selected" : "" %>>5</option>
+              </select>
+            </div>
           </div>
-
-          <button>Update details</button>
+          
+          <button class="btn btn-default">Add restaurant +</button>
         </form>
       </div>
+
+      <br>
+      <br>
+      
 
     </div>

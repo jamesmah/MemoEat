@@ -25,8 +25,7 @@ else if ($(window).width() >= 768)
     } ).mouseleave( function() {
         document.body.style.cursor = "auto";
     } );
-
- }
+  }
 });
 
 
