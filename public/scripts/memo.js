@@ -1,6 +1,9 @@
+$( "div.memo-collapse" ).removeClass("in");
+$( "div.panel-heading").attr("data-toggle", "collapse");
+
 $(window).resize(function() {
 
-if ($(window).width() < 768) {
+if ($(window).width() < 768 && $(window).width() > 700) {
     $( "div.memo-collapse" ).removeClass("in");
     $( "div.panel-heading").attr("data-toggle", "collapse");
     $( "div.panel-heading" ).mouseenter( function() {
@@ -9,7 +12,7 @@ if ($(window).width() < 768) {
         document.body.style.cursor = "auto";
     } );
 }
-else
+else if ($(window).width() >= 768)
 {
     $( "div.memo-collapse" ).addClass("in").css("height","auto");
     
