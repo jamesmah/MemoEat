@@ -310,3 +310,14 @@ end
 
 
 
+
+get '/testing' do
+  erb :testing
+end
+
+post '/testing' do
+  restaurant = Restaurant.new
+  restaurant.image = params[:image]
+  restaurant.save
+  redirect to '/testing'
+end
