@@ -1,7 +1,7 @@
 MemoEat
 
 
-# MemoTile
+# MemoEat
 [http://memoeat.mahjam.es](http://memoeat.mahjam.es)
 
 ---
