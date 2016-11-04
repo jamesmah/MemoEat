@@ -1,6 +1,4 @@
 class User < ActiveRecord::Base
-  
-  
   # Validation constraints
   validates :name, 
     presence: true,
