@@ -1,4 +1,5 @@
 class Restaurant < ActiveRecord::Base
+  # Validation constraints
   validates :user_id, 
     presence: true,
     length: { minimum: 1 }
