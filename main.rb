@@ -156,6 +156,7 @@ end
 
 post '/restaurant' do
   @restaurant = Restaurant.new
+
   @restaurant.user_id = session[:user_id]
   @restaurant.zomato_id = params[:zomato_id]
   @restaurant.name = params[:name]
@@ -167,7 +168,16 @@ post '/restaurant' do
   @restaurant.notes = params[:notes]
   @restaurant.archive = false
 
+  @restaurant.image = params[:image]
+  # binding.pry
+
   if @restaurant.save
+    binding.pry
+    if !!@restaurant.image
+      @restaurant.photo_url = @restaurant.image.url
+      @restaurant.save
+    end
+
     if !!params[:dir]
       redirect to '/' + params[:dir]
     else
@@ -311,13 +321,3 @@ end
 
 
 
-get '/testing' do
-  erb :testing
-end
-
-post '/testing' do
-  restaurant = Restaurant.new
-  restaurant.image = params[:image]
-  restaurant.save
-  redirect to '/testing'
-end

@@ -1,6 +1,7 @@
 require 'carrierwave'
 require 'carrierwave/orm/activerecord'
 require 'fog'
+require 'rmagick'
 
 CarrierWave.configure do |config|
   config.fog_credentials = {
@@ -47,4 +48,6 @@ class Restaurant < ActiveRecord::Base
   validates :cuisines, 
     presence: true,
     length: { minimum: 4, maximum: 400 }
+  validates :price_range,
+    length: { minimum: 1, message: "*required"}
 end
