@@ -59,8 +59,9 @@ Some additional detail of the app
 ### Future works
 
 1. Refactoring ruby code in ERB files, using better CSS class/id names.
-2. Currently only searches for restaurants in Melbourne. Enable user to change location for search.
-3. App to recommend user some restaurants based on rating/preferences.
-4. Enable user to upload their own photos when creating a new restaurant instead of using a link. (Use carrierwave & Amazon S3)
-5. Improve responsive layout. Change the way the collapse toggles from mobile to desktop.
-6. Improve responsive layout. Improve on sizing of cards. If there is too much text it will overflow.
+2. Input pattern validation
+3. Currently only searches for restaurants in Melbourne. Enable user to change location for search.
+4. App to recommend user some restaurants based on rating/preferences.
+5. Enable user to upload their own photos when creating a new restaurant instead of using a link. (Use carrierwave & Amazon S3)
+6. Improve responsive layout. Change the way the collapse toggles from mobile to desktop.
+7. Improve responsive layout. Improve on sizing of cards. If there is too much text it will overflow.
