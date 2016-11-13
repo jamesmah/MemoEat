@@ -1,7 +1,6 @@
 require 'carrierwave'
 require 'carrierwave/orm/activerecord'
 require 'fog'
-require 'rmagick'
 
 CarrierWave.configure do |config|
   config.fog_credentials = {
