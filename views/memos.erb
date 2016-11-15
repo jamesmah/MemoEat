@@ -18,7 +18,8 @@
 
       <% restaurant_count = 0 %>
       <% @restaurants.each do |restaurant| %>
-        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 restaurant-item">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 restaurant-item">
+          <input type="hidden" name="id" value="<%= restaurant['id']%>">
 
           <div class="panel-group">
             <div class="panel panel-default">
@@ -100,7 +101,7 @@
 
 
                   <% if logged_in? && current_user['username'] == params[:username] %>
-                    <div>
+                    <div class="notes">
                       <form action="/restaurant/<%= restaurant['id'] %>" method="post">
                         <input type="hidden" name="dir" value="<%= @dir %>">
                         <input type="hidden" name="_method" value="patch">
@@ -132,7 +133,7 @@
                         <input type="hidden" name="_method" value="patch">
                         <input type="hidden" name="dir" value="<%= @dir %>">
                         <input type="hidden" name="archive" value="false">
-                        <button>Unarchive</button>
+                        <button class="unarchive-btn">Unarchive</button>
                       </form>
 
                     <% else %>
@@ -141,7 +142,7 @@
                         <input type="hidden" name="_method" value="patch">
                         <input type="hidden" name="dir" value="<%= @dir %>">
                         <input type="hidden" name="archive" value="true">
-                        <button>Archive</button>
+                        <button class="archive-btn">Archive</button>
                       </form>
 
                     <% end %>
@@ -149,7 +150,7 @@
                     <form action="/restaurant/<%= restaurant['id'] %>" method="post">
                       <input type="hidden" name="_method" value="delete">
                       <input type="hidden" name="dir" value="<%= @dir %>">
-                      <button>Delete</button>
+                      <button class="delete-btn">Delete</button>
                     </form>
 
                     
@@ -158,7 +159,7 @@
                     
                     <% if logged_in? %>
                     
-                      <form action="/restaurant" method="post">
+                      <form class="add-form" action="/restaurant" method="post">
                         <input type="hidden" name="dir" value="<%= @dir %>">
                         <input type="hidden" name="zomato_id" value="<%= restaurant['zomato_id'] %>">
                         <input type="hidden" name="name" value="<%= restaurant['name'] %>">
@@ -174,7 +175,7 @@
                         <% elsif !!Restaurant.find_by(user_id: session[:user_id], zomato_id: restaurant['zomato_id'], archive: true) %>
                           <button type="button">Archived!</button>
                         <% else %>
-                          <button>Add</button>
+                          <button class="add-btn">Add</button>
                         <% end %>
                       </form>
 

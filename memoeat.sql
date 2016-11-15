@@ -21,5 +21,6 @@ CREATE TABLE restaurants (
   photo_url TEXT,
   rating INTEGER,
   notes TEXT,
-  archive BOOLEAN
+  archive BOOLEAN,
+  image TEXT
 );

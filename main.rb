@@ -169,11 +169,9 @@ post '/restaurant' do
   @restaurant.archive = false
 
   @restaurant.image = params[:image]
-  # binding.pry
 
   if @restaurant.save
-    binding.pry
-    if !!@restaurant.image
+    if !!params[:image] 
       @restaurant.photo_url = @restaurant.image.url
       @restaurant.save
     end
@@ -185,9 +183,27 @@ post '/restaurant' do
     end
   else
     erb :add, :layout => :layout_userpages
-  end
+  end  
+end
 
-  
+post '/api/restaurant' do
+  @restaurant = Restaurant.new
+
+  @restaurant.user_id = session[:user_id]
+  @restaurant.zomato_id = params[:zomato_id]
+  @restaurant.name = params[:name]
+  @restaurant.address = params[:address]
+  @restaurant.cuisines = params[:cuisines]
+  @restaurant.price_range = params[:price_range]
+  @restaurant.photo_url = params[:photo_url]
+  @restaurant.rating = params[:rating]
+  @restaurant.notes = params[:notes]
+  @restaurant.archive = false
+
+  if @restaurant.save
+    return {'saved'=> true}.to_json
+  end
+  return {'saved'=> false}.to_json
 end
 
 delete '/restaurant/:restaurant_id' do
@@ -197,6 +213,10 @@ delete '/restaurant/:restaurant_id' do
   else
     redirect to '/' + current_user['username']
   end
+end
+
+delete '/api/restaurant/:restaurant_id' do
+  Restaurant.find_by(id: params[:restaurant_id]).destroy
 end
 
 patch '/restaurant/:restaurant_id' do
@@ -224,6 +244,30 @@ patch '/restaurant/:restaurant_id' do
   else
     redirect to '/' + current_user['username']
   end
+end
+
+patch '/api/restaurant/:restaurant_id' do
+  restaurant = Restaurant.find_by(id: params[:restaurant_id])
+
+  if !!params[:archive]
+    restaurant.archive = params[:archive]
+  end
+
+  if !!params[:notes]
+    restaurant.notes = params[:notes]
+  end
+
+  if !!params[:rating]
+    if restaurant.rating == params[:rating].to_i
+      restaurant.rating = nil
+    else
+      restaurant.rating = params[:rating]
+    end
+  end
+
+  restaurant.save
+  # binding.pry
+  return restaurant.to_json
 end
 
 get '/settings' do

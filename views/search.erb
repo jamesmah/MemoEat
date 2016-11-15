@@ -60,7 +60,7 @@
                     
                   <% if logged_in? %>
                   
-                    <form action="/restaurant" method="post">
+                    <form class="add-form" action="/restaurant" method="post">
                       <input type="hidden" name="dir" value="<%= @dir %>">
                       <input type="hidden" name="zomato_id" value="<%= restaurant['restaurant']['id'] %>">
                       <input type="hidden" name="name" value="<%= restaurant['restaurant']['name'] %>">
@@ -74,7 +74,7 @@
                       <% elsif !!Restaurant.find_by(user_id: session[:user_id], zomato_id: restaurant['restaurant']['id'], archive: true) %>
                         <button type="button">Archived!</button>
                       <% else %>
-                        <button>Add</button>
+                        <button class="add-btn">Add</button>
                       <% end %>
                     </form>
 
