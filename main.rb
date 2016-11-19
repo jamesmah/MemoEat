@@ -31,9 +31,9 @@ end
 
 post '/login' do
   @username = params[:username]
-  user = User.find_by(username: @username)
+  user = User.where("lower(username) =?", @username.downcase).first
   if !user
-    user = User.find_by(email: @username)
+    user = User.where("lower(email) =?", @username.downcase).first
   end
 
   if !user
