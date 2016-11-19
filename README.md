@@ -1,5 +1,22 @@
 # MemoEat
 [http://memoeat.mahjam.es](http://memoeat.mahjam.es)
+## Technologies used
+HTML, CSS, Bootstrap, Javascript, jQuery, Ruby, Sinatra, ActiveRecord, BCrypt, PostgreSQL, Zomato API, Carrierwave, Fog, Amazon S3
+
+---
+*-- 19 November 2016 --*
+
+## Updates
+1. Divided erb files into views
+2. Refactored variables names and most of the code for better readability
+3. Cleaned up and added validation for user and restaurant creation and updates
+4. Enabled username/email login and removed case sensitivity
+4. Added site footer
+5. Solved toggling of collapsing panels when switching from desktop to mobile view (bootstrap xs width)
+6. Combined layout files into one
+
+## Moving forward
+I won't be planning to put much further work into this project. Will bring forward the lessons and tools used for the project to future works. I am still interested in learning on how I can improve on this project, so any feedback is welcomed. :)
 
 ---
 *-- 15 November 2016 --*
@@ -8,9 +25,6 @@
 1. Enabled users to upload their own photos when creating a new restaurant (using carrierwave & Amazon S3)
 2. Improved responsive layout. Increased card height to allow more text.
 3. Added AJAX for a better user experience.
-
-## Technologies used
-HTML, CSS, Bootstrap, Javascript, jQuery, Ruby, Sinatra, ActiveRecord, BCrypt, PostgreSQL, Zomato API, Carrierwave, Fog, Amazon S3
 
 ## Notes (To do)
 1. Still requires refactoring
@@ -27,9 +41,6 @@ I decide to build a restaurant bookmarking app which each user can store data of
 * adding restaurants to account
 * archiving restaurants
 * viewing collections of other users
-
-## Technologies used
-HTML, CSS, Bootstrap, Javascript, jQuery, Ruby, Sinatra, ActiveRecord, BCrypt, PostgreSQL, Zomato API
 
 ## Approach taken:
 1. Built site diagram, wire frames and user stories
