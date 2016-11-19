@@ -14,7 +14,7 @@
 6. Combined layout files into one
 
 ## Moving forward
-1. I won't be planning to put much further work into this project. Will bring forward the lessons and tools used for the project to future works. I am still interested in learning on how I can improve on this project, so any feedback is welcomed. :)
+I won't be planning to put much further work into this project. Will bring forward the lessons and tools used for the project to future works. I am still interested in learning on how I can improve on this project, so any feedback is welcomed. :)
 
 ---
 *-- 15 November 2016 --*
