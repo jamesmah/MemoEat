@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MemoEat</title>
-  <link rel="icon" type="image/png" href="./images/icon.png">
+  <link rel="icon" type="image/png" href="/images/icon.png">
   <link href="/css/bootstrap.css" rel="stylesheet">
   <link href="/css/style.css" rel="stylesheet">
 </head>
@@ -22,36 +22,87 @@
         <a class="navbar-brand" href="/">MemoEat</a>
       </div>
       <div class="collapse navbar-collapse" id="navbar-collapse-1">
-        <div class="navbar-right">
-          <ul class="nav navbar-nav">
-            <li ><a href="/signup">Sign up</a></li>
-            <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" role="button">Log in <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <form class="navbar-form" action="/login" method="post" autocomplete="off">
-                  <input type="hidden" name="_method" value="post">
-                  <input name="username" type="text" class="form-control" placeholder="username">
-                  <input name="password" type="password" class="form-control" placeholder="password">
-                  <button class="btn btn-default">Log in</button>
-                </form>
-              </ul>
-            </li>
-          </ul>
-        </div>
+        <% if logged_in? %>
+          <!-- Logged in navigation options -->
+          <div class="navbar-right">
+            <form class="navbar-form navbar-left search-bar" action="/search">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search restaurant" name="q">
+                <span class="input-group-btn">
+                  <button class="btn btn-default">Go!</button>
+                </span>
+              </div>
+            </form>
+            <a href="/add">
+              <button type="button" class="btn btn-default navbar-btn navbar-left add-button">Add restaurant +</button>
+            </a>
+            <ul class="nav navbar-nav">
+              <li>
+                  <a href="/<%= current_user['username'] %>">MyMemos</a>
+              </li>
+              <li>
+                  <a href="/<%= current_user['username'] %>/archive">Archive</a>
+              </li>
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" role="button">Settings <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  
+                  <li>
+                    <form action="/settings" method="get">
+                      <button class="btn btn-default">User details</button>
+                    </form>
+                  </li>
+                  <li>
+                    <form action="/login" method="post">
+                      <input type="hidden" name="_method" value="delete">  
+                      <button class="btn btn-default">Log out (<%= current_user['name'] %>)</button>
+                    </form>  
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        <% else %>
+          <!-- Logged out navigation options -->
+          <div class="navbar-right">
+            <ul class="nav navbar-nav">
+              <li ><a href="/signup">Sign up</a></li>
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" role="button">Log in <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <form class="navbar-form" action="/login" method="post" autocomplete="off">
+                    <input type="hidden" name="_method" value="post">
+                    <input name="username" type="text" class="form-control" placeholder="username">
+                    <input name="password" type="password" class="form-control" placeholder="password">
+                    <button class="btn btn-default">Log in</button>
+                  </form>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        <% end %>
       </div>
     </div>
   </nav>
   
+  <!-- Content -->
   <div class="container">
+    <div class="content">
+      <%= yield %>
+    </div>
+  </div>
 
-    <%= yield %>
-    
+  <!-- Footer -->
+  <div class="container">
+    <footer>
+      <hr>
+      <p>Designed by MahJam.es</p>
+    </footer>
   </div>
   
-
-  <script src="/scripts/jquery.js"></script>
-  <script src="/scripts/bootstrap.js"></script>
-  <script src="/scripts/memo.js"></script>
+  <!-- Scripts -->
+  <script src="/js/jquery.js"></script>
+  <script src="/js/bootstrap.js"></script>
+  <script src="/js/app.js"></script>
 </body>
-
 </html>

@@ -4,18 +4,20 @@ require 'httparty'
 require 'uri'
 require 'bcrypt'
 require_relative 'db_config'
-require_relative 'models/restaurant'
 require_relative 'models/user'
+require_relative 'models/restaurant'
+
+### Session controller
 
 enable :sessions
 
 helpers do
-  def logged_in?
-    !!current_user
-  end
-
   def current_user
     User.find_by(id: session[:user_id])
+  end
+
+  def logged_in?
+    !!current_user
   end
 end
 
@@ -24,92 +26,22 @@ get '/' do
 end
 
 get '/login' do
-  erb :login
+  erb :'session/new'
 end
-
-get '/browse' do
-  @dir = "browse"
-  @header_logged_in = "Recent finds"
-  @header = "Recent finds"
-
-  if logged_in?
-    @restaurants = Restaurant.where.not(user_id: session[:user_id]).order('id DESC').limit(40)
-  else
-    @restaurants = Restaurant.all.order('id DESC').limit(40)
-  end
-
-  @restaurants = @restaurants.to_a.shuffle!
-  @restaurants.uniq! do |restaurant|
-    if !!restaurant['zomato_id']
-      restaurant['zomato_id']
-    else
-      restaurant['address']
-    end
-  end
-
-  @restaurants.sort! { |x,y|
-    y['id'] <=> x['id']
-  }
-
-  if logged_in?
-    erb :memos, :layout => :layout_userpages
-  else
-    erb :memos
-  end
-end
-
-get '/signup' do
-  @user = nil
-  erb :signup
-end
-
-post '/signup' do
-
-  @user = User.new
-  @user.name = params[:name]
-  @user.username = params[:username]
-
-  if /[^a-zA-Z]+/ === params[:username]
-    @username_error = "*Invalid username. No special characters or spacing."
-  end
-
-
-  @user.email = params[:email]
-
-  if params[:password] == params[:password_verify]
-    if params[:password] != ""
-      @user.password_digest = BCrypt::Password.create(params[:password])
-    end
-  else
-    @password_verify_error = "Passwords do not match"
-  end
-
-  @user.location_id = 259
-  @user.description = params[:description]
-
-  if !@username_error && !@password_verify_error && @user.save
-    session[:user_id] = @user.id
-    redirect to '/' + current_user['username']
-  else
-    if !@password_verify_error
-      @password_error = @user.errors.messages[:password_digest].join(", ")
-    end
-    # binding.pry
-    erb :signup
-  end
-end
-
 
 post '/login' do
   @username = params[:username]
   user = User.find_by(username: @username)
+  if !user
+    user = User.find_by(email: @username)
+  end
 
   if !user
-    @username_error = "Invalid username"
-    erb :login
+    @username_error = "*invalid username/email"
+    erb :'session/new'
   elsif !user.authenticate(params[:password])
-    @password_error = "*Incorrect password"
-    erb :login
+    @password_error = "*incorrect password"
+    erb :'session/new'
   else
     session[:user_id] = user.id
     redirect to '/' + current_user['username']
@@ -121,42 +53,96 @@ delete '/login' do
   redirect to '/login'
 end
 
-get '/search' do
+
+### Users controller
+
+get '/signup' do
+  @user = User.new
+  @errors = {}
+  erb :'users/new'
+end
+
+post '/signup' do
+  @user = User.new
+  @user.name = params[:name]
+  @user.username = params[:username]
+  @user.email = params[:email]
+  @user.location_id = params[:location_id]
+  @user.description = params[:description]
+  @user.password = params[:password]
+  @user.password_confirmation = params[:password_confirmation]
+  @user.password_digest = BCrypt::Password.create(params[:password])
+
+  @errors = {}
+  if @user.save
+    session[:user_id] = @user.id
+    redirect to '/' + current_user['username']
+  else
+    @user.errors.messages.each do |key, value|
+      if value.any?
+        @errors[key] = '*' + value.join(', ')
+      end
+    end
+    erb :'users/new'
+  end  
+end
+
+get '/settings' do
   redirect to '/' unless logged_in?
 
-  @dir = "search?q=" + params[:q]
+  @user = User.find_by(id: session[:user_id])
+  @errors = {}
 
-  url_string = "https://developers.zomato.com/api/v2.1/search?"
+  erb :'users/edit'
+end
 
-  search_params = {
-    apikey: "c60221a0e2f91ebbc3faa2b40bf0658c",
-    entity_id: 259,
-    entity_type: "city",
-    country_id: 14,
-    q: params[:q],
-    # sort: "rating",
-    # order: "desc",
-  }
+patch '/settings' do
+  @user = User.find_by(id: session[:user_id])
+  @user.name = params[:name]
+  @user.username = params[:username]
+  @user.email = params[:email]
+  @user.location_id = params[:location_id]
+  @user.description = params[:description]
 
-  search_params.each do |key, value|
-    url_string += "\&#{key}\=#{value}"
+  password_verified = @user.authenticate(params[:password_old])
+  if password_verified
+    @user.password = params[:password]
+    @user.password_confirmation = params[:password_confirmation]
+    @user.password_digest = BCrypt::Password.create(params[:password])
   end
 
-  result = HTTParty.get(URI.escape(url_string))
-  @restaurants = result['restaurants']
+  @errors = {}
+  if !password_verified && params[:password_old] != ""
+    @errors[:password_old] = "*Incorrect password"
+  else
+    if @user.save
+      @saved_message = "Saved!"
+    else
+      @user.errors.messages.each do |key, value|
+        if value.any?
+          @errors[key] = '*' + value.join(', ')
+        end
+      end
+    end
+  end
 
-  erb :search, :layout => :layout_userpages
+  erb :'users/edit'
 end
 
+
+### Restaurants controller
 
 get '/add' do
-  erb :add, :layout => :layout_userpages
+  redirect to '/' unless logged_in?
+
+  @restaurant = Restaurant.new
+  @errors = {}
+
+  erb :'restaurants/new'
 end
 
-
-post '/restaurant' do
+post '/add' do
   @restaurant = Restaurant.new
-
   @restaurant.user_id = session[:user_id]
   @restaurant.zomato_id = params[:zomato_id]
   @restaurant.name = params[:name]
@@ -167,9 +153,9 @@ post '/restaurant' do
   @restaurant.rating = params[:rating]
   @restaurant.notes = params[:notes]
   @restaurant.archive = false
-
   @restaurant.image = params[:image]
 
+  @errors = {}
   if @restaurant.save
     if !!params[:image] 
       @restaurant.photo_url = @restaurant.image.url
@@ -178,17 +164,20 @@ post '/restaurant' do
 
     if !!params[:dir]
       redirect to '/' + params[:dir]
-    else
-      redirect to '/' + current_user['username']
     end
+    redirect to '/' + current_user['username']
   else
-    erb :add, :layout => :layout_userpages
-  end  
+    @restaurant.errors.messages.each do |key, value|
+      if value.any?
+        @errors[key] = '*' + value.join(', ')
+      end
+    end
+    erb :'restaurants/new'
+  end
 end
 
 post '/api/restaurant' do
   @restaurant = Restaurant.new
-
   @restaurant.user_id = session[:user_id]
   @restaurant.zomato_id = params[:zomato_id]
   @restaurant.name = params[:name]
@@ -201,22 +190,10 @@ post '/api/restaurant' do
   @restaurant.archive = false
 
   if @restaurant.save
-    return {'saved'=> true}.to_json
-  end
-  return {'saved'=> false}.to_json
-end
-
-delete '/restaurant/:restaurant_id' do
-  Restaurant.find_by(id: params[:restaurant_id]).destroy
-  if !!params[:dir]
-    redirect to '/' + params[:dir]
+    return { 'success' => true }.to_json
   else
-    redirect to '/' + current_user['username']
+    return { 'success' => false }.to_json
   end
-end
-
-delete '/api/restaurant/:restaurant_id' do
-  Restaurant.find_by(id: params[:restaurant_id]).destroy
 end
 
 patch '/restaurant/:restaurant_id' do
@@ -266,81 +243,95 @@ patch '/api/restaurant/:restaurant_id' do
   end
 
   restaurant.save
-  # binding.pry
   return restaurant.to_json
 end
 
-get '/settings' do
-  @user = User.find_by(id: session[:user_id])
-  erb :settings, :layout => :layout_userpages
+delete '/restaurant/:restaurant_id' do
+  Restaurant.find_by(id: params[:restaurant_id]).destroy
+
+  if !!params[:dir]
+    redirect to '/' + params[:dir]
+  else
+    redirect to '/' + current_user['username']
+  end
 end
 
-patch '/settings' do
+delete '/api/restaurant/:restaurant_id' do
+  restaurant = Restaurant.find_by(id: params[:restaurant_id])
+  restaurant.destroy
 
-  @user = User.find_by(id: session[:user_id])
+  if !restaurant.destroyed?x
+    return { 'success' => false }.to_json
+  end
+  return { 'success' => true }.to_json
+end
 
-  @user.name = params[:name]
+get '/search' do
+  redirect to '/' unless logged_in?
 
-  @user.username = params[:username]
+  url_string = "https://developers.zomato.com/api/v2.1/search?"
+  search_params = {
+    apikey: "c60221a0e2f91ebbc3faa2b40bf0658c",
+    entity_id: 259,
+    entity_type: "city",
+    country_id: 14,
+    q: params[:q],
+    # sort: "rating",
+    # order: "desc",
+  }
+  search_params.each do |key, value|
+    url_string += "\&#{key}\=#{value}"
+  end
+  result = HTTParty.get(URI.escape(url_string))
+  @restaurants = result['restaurants']
 
-  if /[^a-zA-Z]+/ === params[:username]
-    @username_error = "*Invalid username. No special characters or spacing."
+  @dir = "search?q=" + params[:q]
+  erb :'restaurants/search'
+end
+
+get '/browse' do
+  @header = "Recent finds"
+
+  if logged_in?
+    @restaurants = Restaurant.where.not(user_id: session[:user_id]).order('id DESC').limit(40)
+  else
+    @restaurants = Restaurant.all.order('id DESC').limit(40)
   end
 
-  @user.email = params[:email]
-  if params[:password_old] != "" 
-    if @user.authenticate(params[:password_old])
-      @password_old = params[:password_old]
-      if !!params[:password_new]
-        if params[:password_new] == params[:password_verify]
-          if params[:password_new]!= ""
-            @user.password_digest = BCrypt::Password.create(params[:password_new])
-          else
-            @password_new_error = "*No new password"
-          end
-        else
-          @password_verify_error = "*Passwords do not match"
-        end
-      end
+  @restaurants = @restaurants.to_a.shuffle!
+  @restaurants.uniq! do |restaurant|
+    if !!restaurant.zomato_id
+      restaurant.zomato_id
     else
-      @password_error = "*Incorrect password"
+      restaurant.address
     end
   end
-  @user.location_id = 259
-  @user.description = params[:description]
 
-  if !@username_error && !@password_error && !@password_new_error && !@password_verify_error && @user.save
-    @password_old = nil
-    @saved_message = "Saved!"
-    erb :settings, :layout => :layout_userpages
-  else
-    erb :settings, :layout => :layout_userpages
-  end
+  @restaurants.sort! { |x,y|
+    y.id <=> x.id
+  }
+
+  @dir = "browse"
+  erb :'restaurants/index'
 end
-
 
 get '/:username' do
-  @dir = params[:username]
+  user = User.find_by(username: params[:username])
 
-  if (!!@user = User.find_by(username: params[:username]) )
-    @header_logged_in = "My Memos"
-    @header = @user['name'] + "'s Memos"
-
-
-    if @user['id'] == session[:user_id]
-      @restaurants = Restaurant.where(user_id: @user['id'], archive: false).order("id ASC")
-    else
-      @restaurants = Restaurant.where(user_id: @user['id']).order("id DESC")
-    end
-
-    if logged_in?
-      erb :memos, :layout => :layout_userpages
-    else
-      erb :memos
-    end
-  else
+  if !user
     redirect to '/'
   end
+
+  if user == current_user
+    @header = "My Memos"
+    @restaurants = Restaurant.where(user_id: user.id, archive: false).order("id DESC")
+  else
+    @header = user.name + "'s Memos"
+    @restaurants = Restaurant.where(user_id: user.id).order("id DESC")
+  end
+
+  @dir = params[:username]
+  erb :'restaurants/index'
 end
 
 get '/:username/' do
@@ -348,20 +339,15 @@ get '/:username/' do
 end
 
 get '/:username/archive' do
-  @dir = params[:username] + "/archive"
+  user = User.find_by(username: params[:username])
 
-  @user = User.find_by(id: session[:user_id])
-  if @user['username'] == params[:username]
-    @header_logged_in = "My Archive"
-    @header = @user['name'] + "'s Archive"
-
-    @restaurants = Restaurant.where(user_id: session[:user_id], archive: true).order("id DESC")
-    erb :memos, :layout => :layout_userpages
-  else
+  if !user == current_user
     redirect to '/'
   end
+
+  @header = "My Archive"
+  @restaurants = Restaurant.where(user_id: session[:user_id], archive: true).order("id DESC")
+
+  @dir = params[:username] + "/archive"
+  erb :'restaurants/index'
 end
-
-
-
-

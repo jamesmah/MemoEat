@@ -1,0 +1,90 @@
+    <!-- Page Header -->
+    <div class="row">
+      <div class="col-lg-12">
+        <h2 class="page-header">Search results</h2>
+      </div>
+    </div>
+
+    <!-- All restaurant cards -->
+    <div class="row">
+      <% @restaurants.each do |restaurant| %>
+        <% restaurant = restaurant['restaurant'] %>
+
+        <!-- Restaurant card -->
+        <div class="restaurant-card col-xs-12 col-sm-6 col-md-4 col-lg-4">
+          <div class="panel panel-default">
+
+            <!-- Card header -->
+            <div class="panel-heading" style="background-image: url(<%= restaurant['thumb'] %>);" data-toggle="collapse" href="#collapse<%= restaurant['id']%>">
+              <h4><%= restaurant['name'] %></h4>
+              <br>
+              <p><%= restaurant['location']['address'] %></p>
+              <img class="visible-xs" src="/images/sort-down.png">
+            </div>
+
+            <!-- Body and footer collapses in xs view -->
+            <div id="collapse<%= restaurant['id']%>" class="panel-collapse collapse">
+              
+              <!-- Card body -->
+              <div class="panel-body">
+                
+                <!-- Cuisines -->
+                <p class="cuisines"><%= restaurant['cuisines'] %></p>
+
+                <!-- Price range -->
+                <p>Price range</p>
+                <div>
+                  <% for i in 1..5 %>
+                    <% if i <= restaurant['price_range'] %>
+                      <img src="/images/price_range_filled.png">
+                    <% else %>
+                      <img src="/images/price_range_empty.png">
+                    <% end %>
+                  <% end %>
+                </div>
+
+                <!-- Zomato Rating -->
+                <p>Zomato rating</a></p>
+                <div class="rating">
+                  <% for i in 1..5 %>
+                    <% if i <= restaurant['user_rating']['aggregate_rating'].to_f + 0.5 %>
+                      <img src="/images/rating_filled.png">
+                    <% else %>
+                      <img src="/images/rating_empty.png">
+                    <% end %>
+                  <% end %>    
+                </div>
+              </div>
+              <!-- /Card body -->
+
+              <!-- Card footer -->
+              <div class="panel-footer">
+                  
+                <% if logged_in? %>
+                  <!-- Add form -->
+                  <form class="add-form" action="/restaurant" method="post">
+                    <input type="hidden" name="dir" value="<%= @dir %>">
+                    <!-- Restaurant data -->
+                    <input type="hidden" name="zomato_id" value="<%= restaurant['id'] %>">
+                    <input type="hidden" name="name" value="<%= restaurant['name'] %>">
+                    <input type="hidden" name="address" value="<%= restaurant['location']['address'] %>">
+                    <input type="hidden" name="cuisines" value="<%= restaurant['cuisines'] %>">
+                    <input type="hidden" name="price_range" value="<%= restaurant['price_range'] %>">
+                    <input type="hidden" name="photo_url" value="<%= restaurant['thumb'] %>">
+                    
+                    <!-- Added, archived and add buttons -->
+                    <% if !!Restaurant.find_by(user_id: session[:user_id], zomato_id: restaurant['id'], archive: false) %>
+                      <button type="button">Added!</button>
+                    <% elsif !!Restaurant.find_by(user_id: session[:user_id], zomato_id: restaurant['id'], archive: true) %>
+                      <button type="button">Archived!</button>
+                    <% else %>
+                      <button class="add-btn">Add</button>
+                    <% end %>
+                  </form>
+                <% end %>
+              </div> <!-- /Card footer -->
+            </div> <!-- /Body and footer collapse -->
+          </div> <!-- /Panel -->
+        </div> <!-- /Restaurant card -->
+      <% end %> <!-- /@restaurants.each -->
+    </div> <!-- /row -->

@@ -32,21 +32,21 @@ end
 
 
 class Restaurant < ActiveRecord::Base
+  # Associations
+  belongs_to :user
+
+  # Image uploader
   mount_uploader :image, ImageUploader
 
   # Validation constraints
   validates :user_id, 
-    presence: true,
-    length: { minimum: 1 }
+    presence: true
   validates :name, 
-    presence: true,
-    length: { minimum: 2, maximum: 400 }
+    presence: true
   validates :address, 
-    presence: true,
-    length: { minimum: 4, maximum: 400 }
+    presence: true
   validates :cuisines, 
-    presence: true,
-    length: { minimum: 4, maximum: 400 }
+    presence: true
   validates :price_range,
-    length: { minimum: 1, message: "*required"}
+    presence: true
 end
