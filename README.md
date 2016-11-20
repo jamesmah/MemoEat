@@ -14,6 +14,7 @@ HTML, CSS, Bootstrap, Javascript, jQuery, Ruby, Sinatra, ActiveRecord, BCrypt, P
 4. Added site footer
 5. Solved toggling of collapsing panels when switching from desktop to mobile view (bootstrap xs width)
 6. Combined layout files into one
+7. User cards will be shown from newest first
 
 ## Moving forward
 I won't be planning to put much further work into this project. Will bring forward the lessons and tools used for the project to future works. I am still interested in learning on how I can improve on this project, so any feedback is welcomed. :)
