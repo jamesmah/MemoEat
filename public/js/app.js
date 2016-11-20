@@ -146,3 +146,10 @@ $('.unarchive-btn').click(function(event) {
 function find_id(event) {
   return $(event.target).closest('.restaurant-card').find('input[name="id"]').val();
 }
+
+$('.prevent-enter-key').on('keydown keypress', function(event) {
+  // debugger
+  if (event.keyCode === 13) { 
+    event.preventDefault();
+  }
+});

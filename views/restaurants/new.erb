@@ -3,7 +3,7 @@
 
         <h2 class="page-header">Add restaurant</h2>
         
-        <form action="/add" method="post" enctype="multipart/form-data">
+        <form class="prevent-enter-key" action="/add" method="post" enctype="multipart/form-data">
           <div class="form-group userform">
             <label for="">Name*</label>
             <input class="form-control" name="name" type="text" value="<%= @restaurant.name %>">

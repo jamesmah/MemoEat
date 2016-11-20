@@ -134,9 +134,12 @@ delete '/users/:user_id' do
     User.find_by(id: params[:user_id]).destroy
   end
   session[:user_id] = nil
-  redirect to '/'
+  redirect to '/delete'
 end
 
+get '/delete' do
+  erb :'users/deleted'
+end
 
 ### Restaurants controller
 
