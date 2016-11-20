@@ -1,7 +1,7 @@
 # MemoEat
 [http://memoeat.mahjam.es](http://memoeat.mahjam.es)
 ## Technologies used
-HTML, CSS, Bootstrap, Javascript, jQuery, Ruby, Sinatra, ActiveRecord, BCrypt, PostgreSQL, Zomato API, Carrierwave, Fog, Amazon S3
+HTML, CSS, Bootstrap, Javascript, jQuery, Ruby, Sinatra, ActiveRecord, BCrypt, AJAX, PostgreSQL, Zomato API, Carrierwave, Fog, Amazon S3
 
 ---
 *-- 19 November 2016 --*
