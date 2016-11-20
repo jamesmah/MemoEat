@@ -173,6 +173,14 @@ p.saved-msg {
   display: inline-block;
 }
 
+div#deleteAccount {
+  margin-top: 30vh;
+}
+
+div#deleteAccount form {
+  display: inline-block;
+}
+
 footer {
   text-align: center;
 }

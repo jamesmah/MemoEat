@@ -59,5 +59,30 @@
           <p class="saved-msg"><%= @saved_message %></p>
         </form>
 
+        <hr>
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#deleteAccount">
+          Delete account
+        </button>
+
+        <!-- Modal -->
+        <div class="modal" id="deleteAccount" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Delete account?</h4>
+              </div>
+              <div class="modal-body">
+                <form action="/users/<%= session[:user_id] %>" method="post">
+                  <input type="hidden" name="_method" value="delete">
+                  <button class="btn btn-default">Delete account</button>
+                </form>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>

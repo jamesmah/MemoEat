@@ -129,6 +129,14 @@ patch '/settings' do
   erb :'users/edit'
 end
 
+delete '/users/:user_id' do
+  if params[:user_id] == session[:user_id]
+    User.find_by(id: params[:user_id]).destroy
+  end
+  session[:user_id] = nil
+  redirect to '/'
+end
+
 
 ### Restaurants controller
 
