@@ -71,7 +71,6 @@ post '/signup' do
   @user.description = params[:description]
   @user.password = params[:password]
   @user.password_confirmation = params[:password_confirmation]
-  @user.password_digest = BCrypt::Password.create(params[:password])
 
   @errors = {}
   if @user.save
@@ -108,7 +107,6 @@ patch '/settings' do
   if password_verified
     @user.password = params[:password]
     @user.password_confirmation = params[:password_confirmation]
-    @user.password_digest = BCrypt::Password.create(params[:password])
   end
 
   @errors = {}
