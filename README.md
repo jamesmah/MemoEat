@@ -47,7 +47,6 @@ I decide to build a restaurant bookmarking app which each user can store data of
 1. Built site diagram, wire frames and user stories
 2. Obtained feedback from course instructors and coursemates
 3. Revised wire frames
-Development
 4. Built general layout using html/css
 5. Developed search function using Zomato API
 6. Data storage using PostgreSQL
