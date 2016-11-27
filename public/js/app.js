@@ -36,7 +36,7 @@ $('.rating button').click(function(event) {
   rating = $(event.target).closest('form').find('input[name="rating"]').val();
 
   $.ajax({
-    method: 'patch',
+    method: 'PATCH',
     url: '/api/restaurant/' + id,
     data: { rating: rating }
   }).done(function(response) {
@@ -60,7 +60,7 @@ $('.notes form').submit(function(event) {
   notes = $(event.target).find('textarea[name="notes"]').val();
 
   $.ajax({
-    method: 'patch',
+    method: 'PATCH',
     url: '/api/restaurant/' + id,
     data: { notes: notes }
   }).done(function(response) {
@@ -76,7 +76,7 @@ $('.add-btn').click(function(event) {
   $form = $(event.target).closest(".add-form");
 
   $.ajax({
-    method: 'post',
+    method: 'POST',
     url: '/api/restaurant',
     data: { 
       zomato_id: $form.find("input[name='zomato_id']").val(),
@@ -101,7 +101,7 @@ $('.delete-btn').click(function(event) {
   id = find_id(event);
 
   $.ajax({
-    method: 'delete',
+    method: 'DELETE',
     url: '/api/restaurant/' + id
   }).done(function(response) {
     data = JSON.parse(response);
@@ -116,7 +116,7 @@ $('.archive-btn').click(function(event) {
     id = find_id(event);
 
     $.ajax({
-        method: 'patch',
+        method: 'PATCH',
         url: '/api/restaurant/' + id,
         data: { archive: true }
     }).done(function(response) {
@@ -132,7 +132,7 @@ $('.unarchive-btn').click(function(event) {
     id = find_id(event);
 
     $.ajax({
-        method: 'patch',
+        method: 'PATCH',
         url: '/api/restaurant/' + id,
         data: { archive: false }
     }).done(function(response) {
@@ -148,7 +148,6 @@ function find_id(event) {
 }
 
 $('.prevent-enter-key').on('keydown keypress', function(event) {
-  // debugger
   if (event.keyCode === 13) { 
     event.preventDefault();
   }

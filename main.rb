@@ -269,7 +269,7 @@ delete '/api/restaurant/:restaurant_id' do
   restaurant = Restaurant.find_by(id: params[:restaurant_id])
   restaurant.destroy
 
-  if !restaurant.destroyed?x
+  if !restaurant.destroyed?
     return { 'success' => false }.to_json
   end
   return { 'success' => true }.to_json
