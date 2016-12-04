@@ -18,7 +18,7 @@ $(window).resize(function() {
     var $panelHeadingClosed = $(".restaurant-card div.panel-heading[data-toggle='collapse']");
     var $memoCollapseClosed = $panelHeadingClosed.closest('.panel').find('.panel-collapse');
 
-    $memoCollapseClosed.addClass("in");
+    $memoCollapseClosed.addClass("in").removeAttr('style aria-expanded');
     $panelHeadingClosed.removeAttr("data-toggle");
     $(".restaurant-card .panel-heading").mouseenter( function() {
       document.body.style.cursor = "auto";
