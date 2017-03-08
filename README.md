@@ -1,5 +1,5 @@
 # MemoEat
-[https://jamesmah.github.io/memoeat/](https://jamesmah.github.io/memoeat/)
+[jamesmah.github.io/memoeat/](https://jamesmah.github.io/memoeat/)
 ## Technologies used
 HTML, CSS, Bootstrap, Javascript, jQuery, Ruby, Sinatra, ActiveRecord, BCrypt, AJAX, PostgreSQL, Zomato API, Carrierwave, Fog, Amazon S3
 
